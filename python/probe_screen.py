@@ -130,53 +130,44 @@ class ProbeScreenClass:
         self.halcomp["ps_z_clearance"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_z_clearance", gtkspinbutton.get_value(), float )
 
+    def gcode(self,s, data = None): 
+        for l in s.split("\n"):
+            self.command.mdi( l )
+            self.command.wait_complete()
+            if self.error_poll() == -1:
+                return -1
+        return 0
 
-    def z_clearance_down(self, data = None):
-        # move Z - z_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Z-%f" % self.spbtn1_z_clearance.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-
-    def z_clearance_up(self, data = None):
-        # move Z - z_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Z%f" % self.spbtn1_z_clearance.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-
-       
-    # --------------  Command buttons -----------------
-    #               Measurement outside
-    # -------------------------------------------------
-    # Down
-    def on_down_released(self, data = None):
-        # Start down.ngc
-        self.command.mode( linuxcnc.MODE_MDI )
-        self.command.wait_complete()
-        self.command.mdi( "O<down> call" )
+    def ocode(self,s, data = None):	
+        self.command.mdi(s)
         self.stat.poll()
         while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
             if self.error_poll() == -1:
-                return
+                return -1
             self.command.wait_complete()
             self.stat.poll()
         self.command.wait_complete()
-        a=self.stat.probed_position
-        self.lb_probe_z.set_text( "%.4f" % float(a[2]) )
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
-    # Simulate
-#    def on_simulate_pressed(self, data = None):
-#        self.halcomp["ps_simulate"] = 0
-#    def on_simulate_released(self, data = None):
-#        self.halcomp["ps_simulate"] = 1
+        if self.error_poll() == -1:
+            return -1
+        return 0
+
+    def z_clearance_down(self, data = None):
+        # move Z - z_clearance
+        s="""G91
+        G0 Z-%f
+        G90""" % (self.spbtn1_z_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return -1
+        return 0
+
+    def z_clearance_up(self, data = None):
+        # move Z + z_clearance
+        s="""G91
+        G0 Z%f
+        G90""" % (self.spbtn1_z_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return -1
+        return 0
 
     def lenght_x(self, data = None):
         if self.lb_probe_xm.get_text() == "" or self.lb_probe_xp.get_text() == "" :
@@ -198,98 +189,130 @@ class ProbeScreenClass:
         else:
             self.lb_probe_ly.set_text("%.4f" % (ym-yp))
 
-    # X+
-    def on_xp_released(self, data = None):
-        # Start xplus.ngc
+    # Simulate
+#    def on_simulate_pressed(self, data = None):
+#        self.halcomp["ps_simulate"] = 0
+#    def on_simulate_released(self, data = None):
+#        self.halcomp["ps_simulate"] = 1
+
+       
+    # --------------  Command buttons -----------------
+    #               Measurement outside
+    # -------------------------------------------------
+    # Down
+    def on_down_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        self.command.mdi( "O<xplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
+        # Start down.ngc
+        if self.ocode ("O<down> call") == -1:
+            return
+        a=self.stat.probed_position
+        self.lb_probe_z.set_text( "%.4f" % float(a[2]) )
+
+    # X+
+    def on_xp_released(self, data = None):
+        self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        if self.error_poll() == -1:
+         # move X - xy_clearance
+        s="""G91
+        G0 X-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+       # Start xplus.ngc
+        if self.ocode ("O<xplus> call") == -1:
             return
         a=self.stat.probed_position
         res=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % res )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
+        # move to finded  point
         self.command.mdi( "G0 X%f" % res)
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
+
     # Y+
     def on_yp_released(self, data = None):
-        # Start yplus.ngc
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        self.command.mdi( "O<yplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+         # move Y - xy_clearance
+        s="""G91
+        G0 Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start yplus.ngc
+        if self.ocode ("O<yplus> call") == -1:
             return
         a=self.stat.probed_position
         res=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % res )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
+        # move to finded  point
         self.command.mdi( "G0 Y%f" % res)
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
+
     # X-
     def on_xm_released(self, data = None):
-        # Start xminus.ngc
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        self.command.mdi( "O<xminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+         # move X + xy_clearance
+        s="""G91
+        G0 X%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start xminus.ngc
+        if self.ocode ("O<xminus> call") == -1:
             return
         a=self.stat.probed_position
         res=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % res )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
+        # move to finded  point
         self.command.mdi( "G0 X%f" % res)
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
+
     # Y-
     def on_ym_released(self, data = None):
-        # Start yminus.ngc
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        self.command.mdi( "O<yminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+         # move Y + xy_clearance
+        s="""G91
+        G0 Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
             return
         a=self.stat.probed_position
         res=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % res )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
+        # move to finded  point
         self.command.mdi( "G0 Y%f" % res)
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
+
 
     # Corners
     # Move Probe manual under corner 2-3 mm
@@ -297,307 +320,229 @@ class ProbeScreenClass:
     def on_xpyp_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        # move Y + edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Y%f" % self.spbtn1_edge_lenght.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X - xy_clearance Y + edge_lenght
+        s="""G91
+        G0 X-%f Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(), self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xplus.ngc
-        self.command.mdi( "O<xplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
 
-        # move X + edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X%f Y-%f" % (self.spbtn1_edge_lenght.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X + edge_lenght +xy_clearance,  Y - edge_lenght - xy_clearance
+        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        s="""G91
+        X%f Y-%f
+        G90""" % (a,a)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yplus.ngc
-        self.command.mdi( "O<yplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X+Y-
     def on_xpym_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        # move Y - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Y-%f" % self.spbtn1_edge_lenght.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X - xy_clearance Y + edge_lenght
+        s="""G91
+        G0 X-%f Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xplus.ngc
-        self.command.mdi( "O<xplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
 
-        # move X + edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X%f Y%f" % (self.spbtn1_edge_lenght.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X + edge_lenght +xy_clearance,  Y + edge_lenght + xy_clearance
+        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        s="""G91
+        X%f Y%f
+        G90""" % (a,a)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yminus.ngc
-        self.command.mdi( "O<yminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X-Y+
     def on_xmyp_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        # move Y + edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Y%f" % self.spbtn1_edge_lenght.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X + xy_clearance Y + edge_lenght
+        s="""G91
+        G0 X%f Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
-        self.command.mdi( "O<xminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
 
-        # move X - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f Y-%f" % (self.spbtn1_edge_lenght.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X - edge_lenght - xy_clearance,  Y - edge_lenght - xy_clearance
+        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        s="""G91
+        X-%f Y-%f
+        G90""" % (a,a)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yplus.ngc
-        self.command.mdi( "O<yplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X-Y-
     def on_xmym_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        # move Y - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 Y-%f" % self.spbtn1_edge_lenght.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X + xy_clearance Y - edge_lenght
+        s="""G91
+        G0 X%f Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(), self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
-        self.command.mdi( "O<xminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
-
-        # move X - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f Y%f" % (self.spbtn1_edge_lenght.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
             return
-        # Start yplus.ngc
-        self.command.mdi( "O<yminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+
+        # move X - edge_lenght - xy_clearance,  Y + edge_lenght + xy_clearance
+        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        s="""G91
+        X-%f Y%f
+        G90""" % (a,a)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
-
 
     # Center X+ X- Y+ Y-
     def on_xy_center_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        # move X - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f" % self.spbtn1_edge_lenght.get_value() )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X - edge_lenght- xy_clearance
+        s="""G91
+        X-%f
+        G90""" % (self.spbtn1_edge_lenght.get_value() + self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xplus.ngc
-        self.command.mdi( "O<xplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
 
-        # move X + 2 edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        aa=2*self.spbtn1_edge_lenght.get_value()
-        self.command.mdi( "G0 X%f" % aa )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move X + 2 edge_lenght + 2 xy_clearance
+        aa=2*(self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value())
+        s="""G91
+        X%f
+        G90""" % (aa)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
-        self.command.mdi( "O<xminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
@@ -608,55 +553,42 @@ class ProbeScreenClass:
         self.lb_probe_xc.set_text( "%.4f" % cxres )
         self.stat.poll()
         back_x=self.stat.position[0]-cxres
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
 
-        # move Y - edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f Y-%f" % (back_x,self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move Y - edge_lenght- xy_clearance  X - edge_lenght - xy_clearance
+        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        s="""G91
+        X-%f Y-%f
+        G90""" % (a,a)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yplus.ngc
-        self.command.mdi( "O<yplus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
-
-        # move Y + 2 edge_lenght
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        aa=2*self.spbtn1_edge_lenght.get_value()
-        self.command.mdi( "G0 Y%f" % aa )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
             return
-        # Start yminus.ngc
-        self.command.mdi( "O<yminus> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+
+        # move Y + 2 edge_lenght + 2 xy_clearance
+        aa=2*(self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value())
+        s="""G91
+        Y%f
+        G90""" % (aa)        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start xminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
@@ -668,9 +600,11 @@ class ProbeScreenClass:
         self.lb_probe_yc.set_text( "%.4f" % cyres )
         diam=0.5*((xres1-xres)+(yres1-yres))
         self.lb_probe_d.set_text( "%.4f" % diam )
+        # move Z to start point up
+        if self.z_clearance_up() == -1:
+            return
+        # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (cxres,cyres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # --------------  Command buttons -----------------
@@ -684,69 +618,42 @@ class ProbeScreenClass:
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         # move Y - edge_lenght X - xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f Y-%f" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 X-%f Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
             return
-        self.z_clearance_down()
-        if self.error_poll() == -1:
+        if self.z_clearance_down() == -1:
             return
-        # Start xplus_in.ngc
-        self.command.mdi( "O<xplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start xplus.ngc
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X - edge_lenght Y - xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 X-%f Y%f" % (tmpxy,tmpxy) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X-%f Y%f
+        G90""" % (tmpxy,tmpxy)        
+        if self.gcode(s) == -1:
             return
         # Start yplus.ngc
-        self.command.mdi( "O<yplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
-        self.z_clearance_up()
-        if self.error_poll() == -1:
+        # move Z to start point
+        if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X+Y-
@@ -754,56 +661,31 @@ class ProbeScreenClass:
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         # move Y + edge_lenght X - xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X-%f Y%f" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 X-%f Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
             return
-        self.z_clearance_down()
-        if self.error_poll() == -1:
+        if self.z_clearance_down() == -1:
             return
         # Start xplus.ngc
-        self.command.mdi( "O<xplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X - edge_lenght Y + xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 X-%f Y-%f" % (tmpxy,tmpxy) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X-%f Y-%f
+        G90""" % (tmpxy,tmpxy)        
+        if self.gcode(s) == -1:
             return
         # Start yminus.ngc
-        self.command.mdi( "O<yminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
@@ -811,13 +693,10 @@ class ProbeScreenClass:
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
         # move Z to start point
-        self.z_clearance_up()
-        if self.error_poll() == -1:
+        if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X-Y+
@@ -825,69 +704,43 @@ class ProbeScreenClass:
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         # move Y - edge_lenght X + xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X%f Y-%f" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 X%f Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
             return
-        self.z_clearance_down()
-        if self.error_poll() == -1:
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
-        self.command.mdi( "O<xminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X + edge_lenght Y - xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 X%f Y%f" % (tmpxy,tmpxy) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X%f Y%f
+        G90""" % (tmpxy,tmpxy)        
+        if self.gcode(s) == -1:
             return
         # Start yplus.ngc
-        self.command.mdi( "O<yplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<yplus> call") == -1:
             return
+
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
-        self.z_clearance_up()
-        if self.error_poll() == -1:
+        # move Z to start point
+        if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
-        self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
         self.command.wait_complete()
 
     # X-Y-
@@ -895,101 +748,59 @@ class ProbeScreenClass:
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         # move Y + edge_lenght X + xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
-        self.command.mdi( "G0 X%f Y%f" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value()) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 X%f Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value(),self.spbtn1_edge_lenght.get_value() )        
+        if self.gcode(s) == -1:
             return
-        self.z_clearance_down()
-        if self.error_poll() == -1:
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
-        self.command.mdi( "O<xminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X + edge_lenght Y - xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 X%f Y-%f" % (tmpxy,tmpxy) )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X%f Y-%f
+        G90""" % (tmpxy,tmpxy)        
+        if self.gcode(s) == -1:
             return
-        # Start yplus.ngc
-        self.command.mdi( "O<yminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
-        self.z_clearance_up()
-        if self.error_poll() == -1:
+        # move Z to start point
+        if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
-
 
     # Hole Xin- Xin+ Yin- Yin+
     def on_xy_hole_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
-        self.z_clearance_down()
-        if self.error_poll() == -1:
+        if self.z_clearance_down() == -1:
             return
-        # move X - edge_lenght + xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
+        # move X - edge_lenght Y + xy_clearance
         tmpx=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 X-%f" % tmpx )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X-%f
+        G90""" % (tmpx)        
+        if self.gcode(s) == -1:
             return
-
-        # Start xminus_in.ngc
-        self.command.mdi( "O<xminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start xminus.ngc
+        if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
@@ -998,26 +809,14 @@ class ProbeScreenClass:
         self.lenght_x()
 
         # move X +2 edge_lenght - 2 xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpx=2*(self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value())
-        self.command.mdi( "G0 X%f" % tmpx )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        X%f
+        G90""" % (tmpx)        
+        if self.gcode(s) == -1:
             return
-        # Start xplus_in.ngc
-        self.command.mdi( "O<xplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start xplus.ngc
+        if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
         a=self.stat.probed_position
@@ -1026,36 +825,21 @@ class ProbeScreenClass:
         self.lenght_x()
         cxres=0.5*(xres+xres1)
         self.lb_probe_xc.set_text( "%.4f" % cxres )
-        self.stat.poll()
 
         # move X to new center
-        self.command.mdi( "G0 X%f" % cxres )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G0 X%f""" % (cxres)        
+        if self.gcode(s) == -1:
             return
 
         # move Y - edge_lenght + xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
-        self.command.mdi( "G0 Y-%f" % tmpy )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 Y-%f
+        G90""" % (tmpy)        
+        if self.gcode(s) == -1:
             return
-        # Start yminus_in.ngc
-        self.command.mdi( "O<yminus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
@@ -1064,26 +848,14 @@ class ProbeScreenClass:
         self.lenght_y()
 
         # move Y +2 edge_lenght - 2 xy_clearance
-        self.command.mdi( "G91" )
-        self.command.wait_complete()
         tmpy=2*(self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value())
-        self.command.mdi( "G0 Y%f" % tmpy )
-        self.command.wait_complete()
-        self.command.wait_complete()
-        self.command.mdi( "G90" )
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        s="""G91
+        G0 Y%f
+        G90""" % (tmpy)        
+        if self.gcode(s) == -1:
             return
-        # Start yplus_in.ngc
-        self.command.mdi( "O<yplus_in> call" )
-        self.stat.poll()
-        while self.stat.exec_state == 7 or self.stat.exec_state == 3 :
-            if self.error_poll() == -1:
-                return
-            self.command.wait_complete()
-            self.stat.poll()
-        self.command.wait_complete()
-        if self.error_poll() == -1:
+        # Start yplus.ngc
+        if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
         a=self.stat.probed_position
@@ -1098,9 +870,8 @@ class ProbeScreenClass:
         # move to center
         self.command.mdi( "G0 Y%f" % cyres)
         self.command.wait_complete()
+        # move Z to start point
         self.z_clearance_up()
-        self.command.mode( linuxcnc.MODE_MANUAL )
-        self.command.wait_complete()
 
 
     def __init__(self, halcomp,builder,useropts):
