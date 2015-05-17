@@ -1,0 +1,19 @@
+[DEFAULT]
+ps_z_clearance = 3.0
+ps_searchvel = 50.0
+searchvel = 600.0
+touch_off_x = 0.0
+ps_probevel = 4.0
+touch_off_z = 1.0
+probeheight = 32.1269240331
+ps_xy_clearance = 3.0
+toolchange-number = 1.0
+ps_edge_lenght = 5.0
+ps_probe_max = 5.0
+use_toolmeasurement = True
+probevel = 4.0
+touch_off_y = 0.0
+blockheight = 30.7459612669
+ps_probe_latch = 0.1
+ps_probe_diam = 2.0
+

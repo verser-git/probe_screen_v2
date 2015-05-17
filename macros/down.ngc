@@ -1,0 +1,15 @@
+o<down> sub
+	
+#<z>=#<_z> (save current Z position)
+G91
+F #<_hal[probe.ps_searchvel]>
+G38.2 Z[-#<_hal[probe.ps_probe_max]>]
+G0 Z[#<_hal[probe.ps_probe_latch]>]
+F #<_hal[probe.ps_probevel]>
+G4 P0.5 
+G38.2 Z[-#<_hal[probe.ps_probe_latch]>*2]
+G90
+G0 Z#<z> (back to start point)
+	
+o<down> endsub
+M2

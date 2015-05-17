@@ -1,0 +1,1439 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="window1">
+    <property name="border_width">1</property>
+    <child>
+      <object class="GtkFrame" id="frame1">
+        <property name="visible">True</property>
+        <property name="label_xalign">0.5</property>
+        <property name="shadow_type">none</property>
+        <child>
+          <object class="GtkVBox" id="vbox1">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkHBox" id="hbox1">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkVBox" id="vbox2">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkFrame" id="frame2">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkTable" id="table1">
+                            <property name="visible">True</property>
+                            <property name="n_rows">3</property>
+                            <property name="n_columns">3</property>
+                            <child>
+                              <object class="GtkButton" id="yp">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="yalign">0</property>
+                                <signal name="released" handler="on_yp_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image4">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="yalign">0</property>
+                                    <property name="pixbuf">Y+.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xmyp">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">0</property>
+                                <signal name="released" handler="on_xmyp_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image1">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="yalign">0</property>
+                                    <property name="pixbuf">X-Y+.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xpyp">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">1</property>
+                                <property name="yalign">0</property>
+                                <signal name="released" handler="on_xpyp_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image2">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="yalign">0</property>
+                                    <property name="pixbuf">X+Y+.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xp">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">1</property>
+                                <signal name="released" handler="on_xp_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image3">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="pixbuf">X+.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xpym">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">1</property>
+                                <property name="yalign">1</property>
+                                <signal name="released" handler="on_xpym_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image5">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="yalign">1</property>
+                                    <property name="pixbuf">X+Y-.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="ym">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="yalign">1</property>
+                                <signal name="released" handler="on_ym_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image6">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="yalign">1</property>
+                                    <property name="pixbuf">Y-.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xmym">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">0</property>
+                                <property name="yalign">1</property>
+                                <signal name="released" handler="on_xmym_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image7">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="yalign">1</property>
+                                    <property name="pixbuf">X-Y-.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xm">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="xalign">0</property>
+                                <signal name="released" handler="on_xm_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image8">
+                                    <property name="width_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="pixbuf">X-.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">2</property>
+                                <property name="top_attach">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="xy_center">
+                                <property name="width_request">90</property>
+                                <property name="height_request">90</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <signal name="released" handler="on_xy_center_released"/>
+                                <child>
+                                  <object class="GtkImage" id="image9">
+                                    <property name="width_request">84</property>
+                                    <property name="height_request">84</property>
+                                    <property name="visible">True</property>
+                                    <property name="pixbuf">xy_center.png</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label2">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Measurement outside&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="vbox3">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkFrame" id="frame5">
+                        <property name="visible">True</property>
+                        <property name="label_xalign">0</property>
+                        <child>
+                          <object class="GtkTable" id="table3">
+                            <property name="visible">True</property>
+                            <property name="n_rows">8</property>
+                            <property name="n_columns">2</property>
+                            <property name="row_spacing">2</property>
+                            <child>
+                              <object class="GtkImage" id="image13">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Search Velocity</property>
+                                <property name="xalign">0.80000001192092896</property>
+                                <property name="pixbuf">search_vel.png</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_search_vel">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Search Velocity</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="shadow_type">none</property>
+                                <property name="adjustment">adj_search_vel</property>
+                                <property name="digits">1</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_search_vel_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image14">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Probe Velocity</property>
+                                <property name="xalign">0.80000001192092896</property>
+                                <property name="pixbuf">probe_vel.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image15">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Max probe  distance</property>
+                                <property name="xalign">0.60000002384185791</property>
+                                <property name="pixbuf">max_probe.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image19">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Probe diameter</property>
+                                <property name="xalign">0.60000002384185791</property>
+                                <property name="pixbuf">probe_diam.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image20">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">XY clearance</property>
+                                <property name="xalign">0.69999998807907104</property>
+                                <property name="pixbuf">XYclearance.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image21">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Edge length</property>
+                                <property name="xalign">0.69999998807907104</property>
+                                <property name="pixbuf">edge_length.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_probe_vel">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Probe Velocity</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">ad_probe_vel</property>
+                                <property name="digits">2</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_probe_vel_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_probe_max">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Max probe  distance</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_probe_max</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_probe_max_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_probe_diam">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Probe diameter</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_probe_diam</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_probe_diam_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">4</property>
+                                <property name="bottom_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_xy_clearance">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">XY clearance</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_xy_clearance</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_xy_clearance_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">5</property>
+                                <property name="bottom_attach">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_edge_lenght">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Edge length</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_edge_lenght</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_edge_lenght_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">6</property>
+                                <property name="bottom_attach">7</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image28">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Latch distance</property>
+                                <property name="xalign">0.60000002384185791</property>
+                                <property name="pixbuf">latch_dist.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_probe_latch">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Latch distance</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_probe_latch</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_probe_latch_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage" id="image29">
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip_text" translatable="yes">Z clearance</property>
+                                <property name="xalign">0.69999998807907104</property>
+                                <property name="pixbuf">Zclearance.png</property>
+                              </object>
+                              <packing>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="spbtn1_z_clearance">
+                                <property name="width_request">80</property>
+                                <property name="height_request">32</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="tooltip_text" translatable="yes">Z clearance</property>
+                                <property name="invisible_char">&#x25CF;</property>
+                                <property name="width_chars">8</property>
+                                <property name="adjustment">adj_z_clearance</property>
+                                <property name="digits">3</property>
+                                <property name="numeric">True</property>
+                                <signal name="value_changed" handler="on_spbtn1_z_clearance_value_changed"/>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="label5">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;b&gt;Settings&lt;/b&gt;</property>
+                            <property name="use_markup">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame7">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <child>
+                      <object class="GtkVBox" id="vbox4">
+                        <property name="visible">True</property>
+                        <child>
+                          <object class="GtkAlignment" id="alignment1">
+                            <property name="visible">True</property>
+                            <property name="left_padding">5</property>
+                            <child>
+                              <object class="GtkTable" id="table5">
+                                <property name="visible">True</property>
+                                <property name="n_rows">3</property>
+                                <property name="n_columns">3</property>
+                                <child>
+                                  <object class="GtkButton" id="xpym1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="yalign">1</property>
+                                    <signal name="released" handler="on_xpym1_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image30">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="yalign">1</property>
+                                        <property name="pixbuf">inX+Y-.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="right_attach">3</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="ym1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="yalign">1</property>
+                                    <signal name="released" handler="on_ym_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image32">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="yalign">1</property>
+                                        <property name="pixbuf">inY-.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xmym1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="yalign">1</property>
+                                    <signal name="released" handler="on_xmym1_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image33">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="yalign">1</property>
+                                        <property name="pixbuf">inX-Y-.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xm1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">0</property>
+                                    <signal name="released" handler="on_xm_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image34">
+                                        <property name="width_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="pixbuf">inX-.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xy_hole">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <signal name="released" handler="on_xy_hole_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image35">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="pixbuf">inHole.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xp1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">1</property>
+                                    <signal name="released" handler="on_xp_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image36">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="pixbuf">inX+.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="right_attach">3</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xpyp1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="yalign">0</property>
+                                    <signal name="released" handler="on_xpyp1_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image37">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">1</property>
+                                        <property name="yalign">0</property>
+                                        <property name="pixbuf">inX+Y+.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">2</property>
+                                    <property name="right_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="yp1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="yalign">0</property>
+                                    <signal name="released" handler="on_yp_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image38">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="yalign">0</property>
+                                        <property name="pixbuf">inY+.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="xmyp1">
+                                    <property name="width_request">90</property>
+                                    <property name="height_request">90</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="yalign">0</property>
+                                    <signal name="released" handler="on_xmyp1_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image39">
+                                        <property name="width_request">84</property>
+                                        <property name="height_request">84</property>
+                                        <property name="visible">True</property>
+                                        <property name="xalign">0</property>
+                                        <property name="yalign">0</property>
+                                        <property name="pixbuf">inX-Y+.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label7">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Measurement inside&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkHBox" id="hbox2">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkFrame" id="frame4">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <child>
+                      <object class="GtkTable" id="table2">
+                        <property name="visible">True</property>
+                        <property name="n_rows">2</property>
+                        <property name="n_columns">2</property>
+                        <child>
+                          <object class="GtkButton" id="down">
+                            <property name="width_request">90</property>
+                            <property name="height_request">90</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="related_action">action1</property>
+                            <signal name="released" handler="on_down_released"/>
+                            <child>
+                              <object class="GtkImage" id="image12">
+                                <property name="width_request">84</property>
+                                <property name="height_request">84</property>
+                                <property name="visible">True</property>
+                                <property name="pixbuf">down.png</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="x_options">GTK_SHRINK</property>
+                            <property name="y_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label4">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Miscellaneous&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame6">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <child>
+                      <object class="GtkTable" id="table4">
+                        <property name="width_request">496</property>
+                        <property name="height_request">120</property>
+                        <property name="visible">True</property>
+                        <property name="border_width">2</property>
+                        <property name="n_rows">4</property>
+                        <property name="n_columns">6</property>
+                        <property name="row_spacing">6</property>
+                        <child>
+                          <object class="GtkImage" id="image25">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe X- pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_xm.png</property>
+                          </object>
+                          <packing>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image26">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe Y- pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_ym.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="right_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image27">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe Z pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_z.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="right_attach">5</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_ym">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="right_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_z">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">5</property>
+                            <property name="right_attach">6</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_xc">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_yc">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="right_attach">4</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_">
+                            <property name="sensitive">False</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">5</property>
+                            <property name="right_attach">6</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image31">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Diameter</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_d.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="right_attach">5</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_d">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">5</property>
+                            <property name="right_attach">6</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                            <property name="y_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="lb_probe_center_x">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Center  X pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_center_x.png</property>
+                          </object>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="lb_probe_center_y">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Center Y pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_center_y.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="right_attach">3</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="lb_probe_a">
+                            <property name="sensitive">False</property>
+                            <property name="tooltip_text" translatable="yes">Angle </property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_a.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="right_attach">5</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_xm">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="use_underline">True</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image10">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe X+ pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_xp.png</property>
+                          </object>
+                          <packing>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_xp">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="use_underline">True</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image16">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe Y+ pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_yp.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="right_attach">3</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_yp">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="right_attach">4</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image18">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe X+ pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_lx.png</property>
+                          </object>
+                          <packing>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="image22">
+                            <property name="visible">True</property>
+                            <property name="tooltip_text" translatable="yes">Probe X+ pos.</property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_ly.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="right_attach">3</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_lx">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="use_underline">True</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_ly">
+                            <property name="visible">True</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="use_underline">True</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="right_attach">4</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="lb_probe_a1">
+                            <property name="sensitive">False</property>
+                            <property name="tooltip_text" translatable="yes">Angle </property>
+                            <property name="xalign">0</property>
+                            <property name="pixbuf">probe_a.png</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="right_attach">5</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="lb_probe_1">
+                            <property name="sensitive">False</property>
+                            <property name="xalign">0.20000000298023224</property>
+                            <property name="width_chars">18</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                              <attribute name="stretch" value="ultra-condensed"/>
+                              <attribute name="gravity" value="east"/>
+                              <attribute name="scale" value="1.300000"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">5</property>
+                            <property name="right_attach">6</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                            <property name="x_options">GTK_SHRINK</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label6">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Search result&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child type="label">
+          <object class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkAdjustment" id="adj_search_vel">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="ad_probe_vel">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_probe_max">
+    <property name="upper">2000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_probe_latch">
+    <property name="upper">100</property>
+    <property name="step_increment">0.10000000000000001</property>
+    <property name="page_increment">1</property>
+    <property name="page_size">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_probe_diam">
+    <property name="upper">100</property>
+    <property name="step_increment">0.10000000000000001</property>
+    <property name="page_increment">1</property>
+    <property name="page_size">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_xy_clearance">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_edge_lenght">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_x0">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_y0">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_z0">
+    <property name="upper">10000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_z_clearance">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+    <property name="page_size">10</property>
+  </object>
+  <object class="GtkAction" id="action1"/>
+</interface>
