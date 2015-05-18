@@ -1,9 +1,10 @@
 # Probe Screen for LinuxCNC
 
  Installation.
-
+-----------------------------------------------------------------------------
 1. Add to your .ini these settings
-[code]
+
+```sh
 [DISPLAY]
 
 DISPLAY = axis
@@ -18,11 +19,13 @@ PREFERENCE_FILE_PATH = ./manualtoolchange.pref
 
 FEATURES=30
 SUBROUTINE_PATH = your_subroutine_path
-[/code]
-This application can be easily connected to Gmoccapy, differ only in lines for panel connection[code]EMBED_TAB_NAME=Probe Screen 
+```
+This application can be easily connected to Gmoccapy, differ only in lines for panel connection
+```sh
+EMBED_TAB_NAME=Probe Screen 
 EMBED_TAB_LOCATION = ntb_user_tabs
-EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/probe_screen.glade [/code]
-[attachment=5264]probe_scr.png[/attachment]
+EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/probe_screen.glade 
+```
 
 2. The following files from the archive are placed in:
 
@@ -38,35 +41,17 @@ all from folder "probe_icons"
 your-folder-configuration
 manualtoolchange.pref[/spoiler]
 
-[color=#004040][size=130][b]Use.[/b][/size][/color]
-
+Use.
+----------------------------------------------------------------------------------
 Set the probe in the spindle.
 Move manually probe for Z about 2-10 mm above the workpiece surface, 
 and for XY about the position indicated by the colored dot on the appropriate button Probe Screen.
 Fill parameters. Meaning of the parameters should be clear from the names and pictures (the name pop up when approaching the mouse). If you change the parameters are automatically saved in manualtoolchange.pref .
 
-[color=#800040]Hit only! the button that corresponds to the position of the probe above the workpiece. For the other buttons - another position above the workpiece.[/color]  
+Hit only! the button that corresponds to the position of the probe above the workpiece. For the other buttons - another position above the workpiece.  
 
 You do not need to expose offsets for tool "Probe", the program desired zero offsets for the current tool makes herself, and G-code works off all in relative coordinates. 
 In fact, you can use the application immediately after the Home.
-
-The trajectory of the probe by the example of measurement [b]outside corner[/b] X+Y+
-[attachment=5257]trak.png[/attachment]
-
-
-
-Path measurement cylinder, [b]edge length[/b] should be approximately [b]equal to the radius[/b] of the cylinder measured, [b]xy clearance[/b] - outside offset from the walls of the cylinder
-[attachment=5258]trak_c.png[/attachment]
-
-
-
-The trajectory of the probe by the example of measurement [b]inside corner [/b]X+Y+
-[attachment=5259]trak_in_corner.png[/attachment]
-
-
-
-Path measurement hole, [b]edge length[/b] should be approximately [b]equal to the radius[/b] of the hole measured, [b]xy clearance[/b] - inside offset from the walls of the hole.
-[attachment=5260]trak_h.png[/attachment]
 
 
 Any of the search ends at XY moving at the desired point (or edge, or corner, or center), Z remains in the original position.
