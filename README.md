@@ -1,8 +1,8 @@
 # probe_screen
 Probe Screen for LinuxCNC
-[color=#004040][size=130][b]Installation.[/b][/size][/color]
+# Installation.
 
-[spoiler= ]1. Add to your .ini these settings
+1. Add to your .ini these settings
 [code]
 [DISPLAY]
 
