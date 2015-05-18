@@ -45,7 +45,7 @@ all from folder "probe_icons"
 
 your-folder-configuration
 ```sh
-manualtoolchange.pref[/spoiler]
+manualtoolchange.pref
 ```
 
 Use.
