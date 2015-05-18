@@ -43,11 +43,6 @@ your-folder-configuration/probe_icons
 all from folder "probe_icons"
 ```
 
-your-folder-configuration
-```sh
-manualtoolchange.pref
-```
-
 Use.
 ----------------------------------------------------------------------------------
 Set the probe in the spindle.
