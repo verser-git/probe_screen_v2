@@ -30,16 +30,23 @@ EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/pro
 2. The following files from the archive are placed in:
 
 your-folder-configuration/pyton
+```sh
 probe_screen.py
-
+```
 your-folder-configuration/your_subroutine_path
+```sh
 all from folder "macros"
+```
 
 your-folder-configuration/probe_icons
+```sh
 all from folder "probe_icons"
+```
 
 your-folder-configuration
+```sh
 manualtoolchange.pref[/spoiler]
+```
 
 Use.
 ----------------------------------------------------------------------------------
