@@ -1,6 +1,6 @@
 # Probe Screen for LinuxCNC
 
- Installation.
+ Install.
 -----------------------------------------------------------------------------
 1. Add to your .ini these settings
 
