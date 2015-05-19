@@ -551,17 +551,19 @@ class ProbeScreenClass:
         self.lenght_x()
         cxres=0.5*(xres+xres1)
         self.lb_probe_xc.set_text( "%.4f" % cxres )
+        # distance to the new center of X from current position
         self.stat.poll()
-        back_x=self.stat.position[0]-cxres
+        to_new_xc=self.stat.position[0]-cxres
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
 
-        # move Y - edge_lenght- xy_clearance  X - edge_lenght - xy_clearance
+
+        # move Y - edge_lenght- xy_clearance  X - to_new_xc
         a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
         s="""G91
         X-%f Y-%f
-        G90""" % (a,a)        
+        G90""" % (to_new_xc,a)
         if self.gcode(s) == -1:
             return
         if self.z_clearance_down() == -1:
