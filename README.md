@@ -19,6 +19,11 @@ PREFERENCE_FILE_PATH = ./manualtoolchange.pref
 
 FEATURES=30
 SUBROUTINE_PATH = your_subroutine_path
+
+......
+[TOOLSENSOR]
+# Control probe rappid feed
+RAPPID_FEED = 600
 ```
 This application can be easily connected to Gmoccapy, differ only in lines for panel connection
 ```sh
