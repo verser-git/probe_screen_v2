@@ -12,8 +12,6 @@ DISPLAY = axis
 EMBED_TAB_NAME=Probe Screen 
 EMBED_TAB_COMMAND=halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -u python/probe_screen.py -x {XID} probe_icons/probe_screen.glade 
 
-PREFERENCE_FILE_PATH = ./manualtoolchange.pref
-
 ......
 [RS274NGC]
 
