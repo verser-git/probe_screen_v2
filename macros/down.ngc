@@ -6,17 +6,18 @@ O<down-if> IF [#<_hal[probe.set_zero]> EQ 0]
     G49
     G10 L20 P0 Z[#<_hal[axis.2.joint-pos-cmd]>]
 O<down-if> ENDIF 
-
+ 
 #<z>=#<_z> (save current Z position)
 G91
 F #<_hal[probe.ps_searchvel]>
 G38.2 Z[-#<_hal[probe.ps_probe_max]>]
-G0 Z[#<_hal[probe.ps_probe_latch]>]
+G1 Z[#<_hal[probe.ps_probe_latch]>] F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
 F #<_hal[probe.ps_probevel]>
 G4 P0.5 
 G38.2 Z[-#<_hal[probe.ps_probe_latch]>*2]
 G90
-G0 Z#<z> (back to start point)
+(back to start point)
+G1 Z#<z> F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
 	
 o<down> endsub
 M2

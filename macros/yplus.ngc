@@ -1,22 +1,22 @@
 o<yplus> sub
 
-(cancel XY offsets)
+(cancel Y offsets)
 G92.1
 G49
-G10 L20 P0  X[#<_hal[axis.0.joint-pos-cmd]>] Y[#<_hal[axis.1.joint-pos-cmd]>]
-
+G10 L20 P0 Y[#<_hal[axis.1.joint-pos-cmd]>]
+ 	
 #<y>=#<_y> (save start Y position) 
 G91
 F #<_hal[probe.ps_searchvel]>
 G38.2 Y[#<_hal[probe.ps_probe_max]>]
-G0 Y[-#<_hal[probe.ps_probe_latch]>]
+G1 Y[-#<_hal[probe.ps_probe_latch]>] F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
 F #<_hal[probe.ps_probevel]>
 G4 P0.5
 G38.2 Y[#<_hal[probe.ps_probe_latch]>*2]
 (print, probe Y=#5062 )
 G90
 (back to start point)
-G0 Y#<y> 
+G1 Y#<y> F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
 	
 o<yplus> endsub
 M2
