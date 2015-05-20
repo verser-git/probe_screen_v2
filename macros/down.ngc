@@ -1,5 +1,12 @@
 o<down> sub
 	
+O<down-if> IF [#<_hal[probe.set_zero]> EQ 0]
+    (cancel Z offsets)
+    G92.1
+    G49
+    G10 L20 P0 Z[#<_hal[axis.2.joint-pos-cmd]>]
+O<down-if> ENDIF 
+
 #<z>=#<_z> (save current Z position)
 G91
 F #<_hal[probe.ps_searchvel]>

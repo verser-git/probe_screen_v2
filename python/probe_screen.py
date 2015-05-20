@@ -25,7 +25,7 @@ import gladevcp
 import pango
 from linuxcnc import ini
 import ConfigParser
-
+from datetime import datetime
 
 CONFIGPATH1 = os.environ['CONFIG_DIR']
 
@@ -95,6 +95,58 @@ class ProbeScreenClass:
                 temp = os.path.join(CONFIGPATH1, "%s.pref" % machinename)
         print("****  probe_screen GETINIINFO **** \n Preference file path: %s" % temp)
         return temp
+
+    def add_history(self,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.):
+#        c = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        c = datetime.now().strftime('%H:%M:%S  ')
+        if "Xm" in s : 
+            c += "X-=%.4f "%xm
+        if "Xc" in s : 
+            c += "Xc=%.4f "%xc
+        if "Xp" in s : 
+            c += "X+=%.4f "%xp
+        if "Lx" in s : 
+            c += "Lx=%.4f "%lx
+        if "Ym" in s : 
+            c += "Y-=%.4f "%ym
+        if "Yc" in s : 
+            c += "Yc=%.4f "%yc
+        if "Yp" in s : 
+            c += "Y+=%.4f "%yp
+        if "Ly" in s : 
+            c += "Ly=%.4f "%ly
+        if "Z" in s : 
+            c += "Z=%.4f "%z
+        if "D" in s : 
+            c += "D=%.4f"%d
+        i=self.buffer.get_end_iter()
+        i.set_line(0)
+        self.buffer.insert(i, "%s \n" % c)
+
+
+    # Set Zero check
+    def on_chk_set_zero_toggled( self, gtkcheckbutton, data = None ):
+        self.halcomp["set_zero"] = gtkcheckbutton.get_active()
+        self.prefs.putpref( "chk_set_zero", gtkcheckbutton.get_active(), bool )
+#        i=self.buffer.get_end_iter()
+#        i.set_line(0)
+#        self.buffer.insert(i, "Set Zero = %s\n" % gtkcheckbutton.get_active())
+
+    def set_zerro(self,s="XYZ",x=0.,y=0.,z=0.):
+        if self.chk_set_zero.get_active() :
+            #  Z current position
+            self.stat.poll()
+            tmpz=self.stat.position[2]
+            c = "G10 L20 P0"
+            s=s.upper()
+            if "X" in s : 
+                c += " X%s"%x
+            if "Y" in s : 
+                c += " Y%s"%y
+            if "Z" in s :
+                tmpz=tmpz-z
+                c += " Z%s"%tmpz
+            self.gcode(c)
 
     # Spin buttons
 
@@ -170,24 +222,30 @@ class ProbeScreenClass:
         return 0
 
     def lenght_x(self, data = None):
+        res=0
         if self.lb_probe_xm.get_text() == "" or self.lb_probe_xp.get_text() == "" :
-            return
+            return res
         xm = float(self.lb_probe_xm.get_text())
         xp = float(self.lb_probe_xp.get_text())
         if xm < xp :
-            self.lb_probe_lx.set_text("%.4f" % (xp-xm))
+            res=xp-xm
         else:
-            self.lb_probe_lx.set_text("%.4f" % (xm-xp))
+            res=xm-xp
+        self.lb_probe_lx.set_text("%.4f" % res)
+        return res
 
     def lenght_y(self, data = None):
+        res=0
         if self.lb_probe_ym.get_text() == "" or self.lb_probe_yp.get_text() == "" :
-            return
+            return res
         ym = float(self.lb_probe_ym.get_text())
         yp = float(self.lb_probe_yp.get_text())
         if ym < yp :
-            self.lb_probe_ly.set_text("%.4f" % (yp-ym))
+            res=yp-ym
         else:
-            self.lb_probe_ly.set_text("%.4f" % (ym-yp))
+            res=ym-yp
+        self.lb_probe_ly.set_text("%.4f" % res)
+        return res
 
     # Simulate
 #    def on_simulate_pressed(self, data = None):
@@ -208,7 +266,8 @@ class ProbeScreenClass:
             return
         a=self.stat.probed_position
         self.lb_probe_z.set_text( "%.4f" % float(a[2]) )
-
+        self.add_history("Z",0,0,0,0,0,0,0,0,a[2],0)
+        self.set_zerro("Z",0,0,a[2])
     # X+
     def on_xp_released(self, data = None):
         self.command.mode( linuxcnc.MODE_MDI )
@@ -227,13 +286,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         res=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % res )
-        self.lenght_x()
+        self.add_history("XpLx",0,0,res,self.lenght_x(),0,0,0,0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f" % res)
         self.command.wait_complete()
+        self.set_zerro("X")
 
     # Y+
     def on_yp_released(self, data = None):
@@ -254,12 +314,14 @@ class ProbeScreenClass:
         res=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % res )
         self.lenght_y()
+        self.add_history("YpLy",0,0,0,0,0,0,res,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 Y%f" % res)
         self.command.wait_complete()
+        self.set_zerro("Y")
 
     # X-
     def on_xm_released(self, data = None):
@@ -279,13 +341,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         res=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % res )
-        self.lenght_x()
+        self.add_history("XmLx",res,0,0,self.lenght_x(),0,0,0,0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f" % res)
         self.command.wait_complete()
+        self.set_zerro("X")
 
     # Y-
     def on_ym_released(self, data = None):
@@ -305,14 +368,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         res=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % res )
-        self.lenght_y()
+        self.add_history("YmLy",0,0,0,0,res,0,0,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 Y%f" % res)
         self.command.wait_complete()
-
+        self.set_zerro("Y")
 
     # Corners
     # Move Probe manual under corner 2-3 mm
@@ -335,7 +398,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
-        self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -356,13 +418,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X+Y-
     def on_xpym_released(self, data = None):
@@ -383,7 +446,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
-        self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -404,13 +466,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X-Y+
     def on_xmyp_released(self, data = None):
@@ -431,7 +494,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -452,13 +514,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X-Y-
     def on_xmym_released(self, data = None):
@@ -479,7 +542,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -500,13 +562,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # Center X+ X- Y+ Y-
     def on_xy_center_released(self, data = None):
@@ -525,9 +588,8 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.stat.probed_position
-        xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres )
-        self.lenght_x()
+        xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xp.set_text( "%.4f" % xpres )
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -546,14 +608,13 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.stat.probed_position
-        xres1=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xm.set_text( "%.4f" % xres1 )
-        self.lenght_x()
-        cxres=0.5*(xres+xres1)
-        self.lb_probe_xc.set_text( "%.4f" % cxres )
+        xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xm.set_text( "%.4f" % xmres )
+        xcres=0.5*(xpres+xmres)
+        self.lb_probe_xc.set_text( "%.4f" % xcres )
         # distance to the new center of X from current position
         self.stat.poll()
-        to_new_xc=self.stat.position[0]-cxres
+        to_new_xc=self.stat.position[0]-xcres
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -573,9 +634,8 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.stat.probed_position
-        yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_yp.set_text( "%.4f" % ypres )
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -594,20 +654,22 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.stat.probed_position
-        yres1=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_ym.set_text( "%.4f" % yres1 )
+        ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_ym.set_text( "%.4f" % ymres )
         self.lenght_y()
         # find, show and move to finded  point
-        cyres=0.5*(yres+yres1)
-        self.lb_probe_yc.set_text( "%.4f" % cyres )
-        diam=0.5*((xres1-xres)+(yres1-yres))
+        ycres=0.5*(ypres+ymres)
+        self.lb_probe_yc.set_text( "%.4f" % ycres )
+        diam=0.5*((xmres-xpres)+(ymres-ypres))
         self.lb_probe_d.set_text( "%.4f" % diam )
+        self.add_history("XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
-        self.command.mdi( "G0 X%f Y%f" % (cxres,cyres))
+        self.command.mdi( "G0 X%f Y%f" % (xcres,ycres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # --------------  Command buttons -----------------
     #               Measurement inside
@@ -634,7 +696,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
 
         # move X - edge_lenght Y - xy_clearance
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
@@ -650,13 +711,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X+Y-
     def on_xpym1_released(self, data = None):
@@ -677,7 +739,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
 
         # move X - edge_lenght Y + xy_clearance
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
@@ -693,13 +754,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X-Y+
     def on_xmyp1_released(self, data = None):
@@ -720,7 +782,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
 
         # move X + edge_lenght Y - xy_clearance
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
@@ -737,13 +798,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # X-Y-
     def on_xmym1_released(self, data = None):
@@ -764,7 +826,6 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
 
         # move X + edge_lenght Y - xy_clearance
         tmpxy=self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value()
@@ -780,13 +841,14 @@ class ProbeScreenClass:
         a=self.stat.probed_position
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.lenght_y()
+        self.add_history("XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
         # move to finded  point
         self.command.mdi( "G0 X%f Y%f" % (xres,yres))
         self.command.wait_complete()
+        self.set_zerro("XY")
 
     # Hole Xin- Xin+ Yin- Yin+
     def on_xy_hole_released(self, data = None):
@@ -806,9 +868,8 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.stat.probed_position
-        xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xm.set_text( "%.4f" % xres )
-        self.lenght_x()
+        xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xm.set_text( "%.4f" % xmres )
 
         # move X +2 edge_lenght - 2 xy_clearance
         tmpx=2*(self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value())
@@ -822,14 +883,13 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.stat.probed_position
-        xres1=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xres1 )
-        self.lenght_x()
-        cxres=0.5*(xres+xres1)
-        self.lb_probe_xc.set_text( "%.4f" % cxres )
+        xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xp.set_text( "%.4f" % xpres )
+        xcres=0.5*(xmres+xpres)
+        self.lb_probe_xc.set_text( "%.4f" % xcres )
 
         # move X to new center
-        s="""G0 X%f""" % (cxres)        
+        s="""G0 X%f""" % (xcres)        
         if self.gcode(s) == -1:
             return
 
@@ -845,9 +905,8 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.stat.probed_position
-        yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_ym.set_text( "%.4f" % yres )
-        self.lenght_y()
+        ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_ym.set_text( "%.4f" % ymres )
 
         # move Y +2 edge_lenght - 2 xy_clearance
         tmpy=2*(self.spbtn1_edge_lenght.get_value()-self.spbtn1_xy_clearance.get_value())
@@ -861,19 +920,20 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.stat.probed_position
-        yres1=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres1 )
-        self.lenght_y()
+        ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_yp.set_text( "%.4f" % ypres )
         # find, show and move to finded  point
-        cyres=0.5*(yres+yres1)
-        self.lb_probe_yc.set_text( "%.4f" % cyres )
-        diam=0.5*((xres1-xres)+(yres1-yres))
+        ycres=0.5*(ymres+ypres)
+        self.lb_probe_yc.set_text( "%.4f" % ycres )
+        diam=0.5*((xpres-xmres)+(ypres-ymres))
         self.lb_probe_d.set_text( "%.4f" % diam )
+        self.add_history("XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam)
         # move to center
-        self.command.mdi( "G0 Y%f" % cyres)
+        self.command.mdi( "G0 Y%f" % ycres)
         self.command.wait_complete()
         # move Z to start point
         self.z_clearance_up()
+        self.set_zerro("XY")
 
 
     def __init__(self, halcomp,builder,useropts):
@@ -887,7 +947,11 @@ class ProbeScreenClass:
         self.builder = builder
         self.prefs = ps_preferences( self.get_preference_file_path() )
         self.e = linuxcnc.error_channel()
+        self.textarea = builder.get_object("textview1")
 
+        self.buffer = self.textarea.get_property('buffer')
+        self.chk_set_zero = self.builder.get_object("chk_set_zero")
+        self.chk_set_zero.set_active( self.prefs.getpref( "chk_set_zero", False, bool ) )
         self.xpym = self.builder.get_object("xpym")
         self.ym = self.builder.get_object("ym")
         self.xmym = self.builder.get_object("xmym")
@@ -932,6 +996,9 @@ class ProbeScreenClass:
         self.halcomp.newpin( "ps_probe_diam", hal.HAL_FLOAT, hal.HAL_OUT )
         self.halcomp.newpin( "ps_xy_clearance", hal.HAL_FLOAT, hal.HAL_OUT )
         self.halcomp.newpin( "ps_edge_lenght", hal.HAL_FLOAT, hal.HAL_OUT )
+        self.halcomp.newpin( "set_zero", hal.HAL_BIT, hal.HAL_OUT )
+        if self.chk_set_zero.get_active():
+            self.halcomp["set_zero"] = True
 #        self.halcomp.newpin( "ps_simulate", hal.HAL_BIT, hal.HAL_OUT )
         self.spbtn1_search_vel.set_value( self.prefs.getpref( "ps_searchvel", 75.0, float ) )
         self.spbtn1_probe_vel.set_value( self.prefs.getpref( "ps_probevel", 10.0, float ) )

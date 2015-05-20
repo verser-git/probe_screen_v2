@@ -1,9 +1,9 @@
 o<xminus> sub
 
-(cancel all offsets)
+(cancel XY offsets)
 G92.1
 G49
-G10 L20 P0  X[#<_hal[axis.0.joint-pos-cmd]>] Y[#<_hal[axis.1.joint-pos-cmd]>] Z[#<_hal[axis.2.joint-pos-cmd]>]
+G10 L20 P0  X[#<_hal[axis.0.joint-pos-cmd]>] Y[#<_hal[axis.1.joint-pos-cmd]>]
 	
 #<x>=#<_x> (save start X position) 
 G91
