@@ -199,7 +199,7 @@ class ProbeScreenClass:
     def gcode(self,s, data = None): 
         for l in s.split("\n"):
             if "G1" in l :
-                l+= " F#<_ini[TOOLSENSOR]RAPPID_SPEED>"
+                l+= " F#<_ini[TOOLSENSOR]RAPID_SPEED>"
             self.command.mdi( l )
             self.command.wait_complete()
             if self.error_poll() == -1:

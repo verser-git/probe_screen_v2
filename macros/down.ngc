@@ -11,13 +11,13 @@ O<down-if> ENDIF
 G91
 F #<_hal[probe.ps_searchvel]>
 G38.2 Z[-#<_hal[probe.ps_probe_max]>]
-G1 Z[#<_hal[probe.ps_probe_latch]>] F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
+G1 Z[#<_hal[probe.ps_probe_latch]>] F#<_ini[TOOLSENSOR]RAPID_SPEED> 
 F #<_hal[probe.ps_probevel]>
 G4 P0.5 
 G38.2 Z[-#<_hal[probe.ps_probe_latch]>*2]
 G90
 (back to start point)
-G1 Z#<z> F#<_ini[TOOLSENSOR]RAPPID_SPEED> 
+G1 Z#<z> F#<_ini[TOOLSENSOR]RAPID_SPEED> 
 	
 o<down> endsub
 M2
