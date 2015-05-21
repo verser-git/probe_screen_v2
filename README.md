@@ -12,13 +12,16 @@ DISPLAY = axis
 EMBED_TAB_NAME=Probe Screen 
 EMBED_TAB_COMMAND=halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -u python/probe_screen.py -x {XID} probe_icons/probe_screen.glade 
 
-PREFERENCE_FILE_PATH = ./manualtoolchange.pref
-
 ......
 [RS274NGC]
 
 FEATURES=30
 SUBROUTINE_PATH = your_subroutine_path
+
+......
+[TOOLSENSOR]
+# Control probe rappid feed
+RAPPID_FEED = 600
 ```
 This application can be easily connected to Gmoccapy, differ only in lines for panel connection
 ```sh
