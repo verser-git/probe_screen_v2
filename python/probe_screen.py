@@ -127,6 +127,7 @@ class ProbeScreenClass:
     # Set Zero check
     def on_chk_set_zero_toggled( self, gtkcheckbutton, data = None ):
         self.halcomp["set_zero"] = gtkcheckbutton.get_active()
+        self.hal_led_set_zero.hal_pin.set(gtkcheckbutton.get_active())
         self.prefs.putpref( "chk_set_zero", gtkcheckbutton.get_active(), bool )
 #        i=self.buffer.get_end_iter()
 #        i.set_line(0)
@@ -1013,6 +1014,8 @@ class ProbeScreenClass:
         self.spbtn1_xy_clearance = self.builder.get_object("spbtn1_xy_clearance")
         self.spbtn1_edge_lenght = self.builder.get_object("spbtn1_edge_lenght")
 
+        self.hal_led_set_zero = self.builder.get_object("hal_led_set_zero")
+
         self.spbtn_offs_x = self.builder.get_object("spbtn_offs_x")
         self.spbtn_offs_y = self.builder.get_object("spbtn_offs_y")
         self.spbtn_offs_z = self.builder.get_object("spbtn_offs_z")
@@ -1045,6 +1048,7 @@ class ProbeScreenClass:
         self.halcomp.newpin( "set_zero", hal.HAL_BIT, hal.HAL_OUT )
         if self.chk_set_zero.get_active():
             self.halcomp["set_zero"] = True
+            self.hal_led_set_zero.hal_pin.set(1)
 #        self.halcomp.newpin( "ps_simulate", hal.HAL_BIT, hal.HAL_OUT )
         self.spbtn1_search_vel.set_value( self.prefs.getpref( "ps_searchvel", 300.0, float ) )
         self.spbtn1_probe_vel.set_value( self.prefs.getpref( "ps_probevel", 10.0, float ) )

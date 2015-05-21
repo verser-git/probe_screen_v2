@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires gladevcp 0.0 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="window1">
     <property name="border_width">1</property>
@@ -574,19 +575,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="chk_set_zero">
-                        <property name="label" translatable="yes">Set Zero</property>
-                        <property name="height_request">30</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Set all offsets to Zero according to probe result</property>
-                        <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="on_chk_set_zero_toggled"/>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                   </object>
                   <packing>
@@ -927,7 +916,7 @@
                             <child>
                               <object class="GtkTable" id="table6">
                                 <property name="visible">True</property>
-                                <property name="n_rows">3</property>
+                                <property name="n_rows">4</property>
                                 <property name="n_columns">2</property>
                                 <child>
                                   <object class="GtkSpinButton" id="spbtn_offs_x">
@@ -941,6 +930,8 @@
                                     <signal name="value_changed" handler="on_spbtn_offs_x_value_changed"/>
                                   </object>
                                   <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
                                     <property name="x_options">GTK_SHRINK | GTK_FILL</property>
                                     <property name="y_options">GTK_SHRINK</property>
                                   </packing>
@@ -957,8 +948,8 @@
                                     <signal name="value_changed" handler="on_spbtn_offs_y_value_changed"/>
                                   </object>
                                   <packing>
-                                    <property name="top_attach">1</property>
-                                    <property name="bottom_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
                                     <property name="x_options">GTK_SHRINK | GTK_FILL</property>
                                     <property name="y_options">GTK_SHRINK</property>
                                   </packing>
@@ -975,8 +966,8 @@
                                     <signal name="value_changed" handler="on_spbtn_offs_z_value_changed"/>
                                   </object>
                                   <packing>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
+                                    <property name="top_attach">3</property>
+                                    <property name="bottom_attach">4</property>
                                     <property name="x_options">GTK_SHRINK | GTK_FILL</property>
                                     <property name="y_options">GTK_SHRINK</property>
                                   </packing>
@@ -989,36 +980,11 @@
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Set Touch off X</property>
-                                    <property name="related_action">hal_action_reload</property>
                                     <signal name="released" handler="on_btn1_set_x_released"/>
                                     <child>
                                       <object class="GtkImage" id="image11">
                                         <property name="visible">True</property>
                                         <property name="pixbuf">X0.png</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="left_attach">1</property>
-                                    <property name="right_attach">2</property>
-                                    <property name="x_options">GTK_SHRINK</property>
-                                    <property name="y_options">GTK_SHRINK</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="btn1_set_y">
-                                    <property name="width_request">28</property>
-                                    <property name="height_request">28</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="tooltip_text" translatable="yes">Set Touch off Y</property>
-                                    <property name="related_action">hal_action_reload</property>
-                                    <signal name="released" handler="on_btn1_set_y_released"/>
-                                    <child>
-                                      <object class="GtkImage" id="image17">
-                                        <property name="visible">True</property>
-                                        <property name="pixbuf">Y0.png</property>
                                       </object>
                                     </child>
                                   </object>
@@ -1032,6 +998,31 @@
                                   </packing>
                                 </child>
                                 <child>
+                                  <object class="GtkButton" id="btn1_set_y">
+                                    <property name="width_request">28</property>
+                                    <property name="height_request">28</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="tooltip_text" translatable="yes">Set Touch off Y</property>
+                                    <signal name="released" handler="on_btn1_set_y_released"/>
+                                    <child>
+                                      <object class="GtkImage" id="image17">
+                                        <property name="visible">True</property>
+                                        <property name="pixbuf">Y0.png</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                    <property name="x_options">GTK_SHRINK</property>
+                                    <property name="y_options">GTK_SHRINK</property>
+                                  </packing>
+                                </child>
+                                <child>
                                   <object class="GtkButton" id="btn1_set_z">
                                     <property name="width_request">28</property>
                                     <property name="height_request">28</property>
@@ -1039,7 +1030,6 @@
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="tooltip_text" translatable="yes">Set Touch off Z</property>
-                                    <property name="related_action">hal_action_reload</property>
                                     <signal name="released" handler="on_btn1_set_z_released"/>
                                     <child>
                                       <object class="GtkImage" id="image23">
@@ -1051,8 +1041,36 @@
                                   <packing>
                                     <property name="left_attach">1</property>
                                     <property name="right_attach">2</property>
-                                    <property name="top_attach">2</property>
-                                    <property name="bottom_attach">3</property>
+                                    <property name="top_attach">3</property>
+                                    <property name="bottom_attach">4</property>
+                                    <property name="x_options">GTK_SHRINK</property>
+                                    <property name="y_options">GTK_SHRINK</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="chk_set_zero">
+                                    <property name="label" translatable="yes">Set Zero</property>
+                                    <property name="height_request">30</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="draw_indicator">True</property>
+                                    <signal name="toggled" handler="on_chk_set_zero_toggled"/>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="HAL_LED" id="hal_led_set_zero">
+                                    <property name="width_request">30</property>
+                                    <property name="height_request">30</property>
+                                    <property name="visible">True</property>
+                                    <property name="led_blink_rate">0</property>
+                                    <property name="led_shiny">True</property>
+                                    <property name="pick_color_off">#a0a0a0a0a0a0</property>
+                                    <property name="pick_color_on">#d8d84242ffff</property>
+                                  </object>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
                                     <property name="x_options">GTK_SHRINK</property>
                                     <property name="y_options">GTK_SHRINK</property>
                                   </packing>
@@ -1513,7 +1531,7 @@
                     <child type="label">
                       <object class="GtkLabel" id="label6">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Search result&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Result&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -1553,6 +1571,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="editable">False</property>
+                        <property name="wrap_mode">word</property>
                         <property name="cursor_visible">False</property>
                         <property name="accepts_tab">False</property>
                       </object>
