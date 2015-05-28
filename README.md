@@ -51,7 +51,7 @@ Use.
 Set the probe in the spindle.
 Move manually probe for Z about 2-10 mm above the workpiece surface, 
 and for XY about the position indicated by the colored dot on the appropriate button Probe Screen.
-Fill parameters. Meaning of the parameters should be clear from the names and pictures (the name pop up when approaching the mouse). If you change the parameters are automatically saved in manualtoolchange.pref .
+Fill parameters. Meaning of the parameters should be clear from the names and pictures (the name pop up when approaching the mouse). If you change the parameters are automatically saved in .pref .
 
 Hit only! the button that corresponds to the position of the probe above the workpiece. For the other buttons - another position above the workpiece.  
 
