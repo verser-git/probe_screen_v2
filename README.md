@@ -32,7 +32,7 @@ EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/pro
 
 2. The following files from the archive are placed in:
 
-your-folder-configuration/pyton
+your-folder-configuration/python
 ```sh
 probe_screen.py
 ```
