@@ -1432,7 +1432,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="lb_probe_">
+                              <object class="GtkLabel" id="lb_probe_a">
                                 <property name="visible">True</property>
                                 <property name="tooltip_text" translatable="yes">&#x410;ngle of rotation</property>
                                 <property name="width_chars">18</property>
@@ -1517,7 +1517,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkImage" id="lb_probe_a">
+                              <object class="GtkImage" id="im_probe_a">
                                 <property name="visible">True</property>
                                 <property name="tooltip_text" translatable="yes">&#x410;ngle of rotation</property>
                                 <property name="xalign">0</property>

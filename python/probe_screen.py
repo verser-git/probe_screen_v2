@@ -177,6 +177,7 @@ class ProbeScreenClass:
     def rotateXY(self,a=0.):
         if self.chk_auto_rott.get_active() :
             self.spbtn_offs_angle.set_value(math.degrees(a))
+            self.lb_probe_a.set_text( "%.3f" % math.degrees(a))
             s="G10 L2 P0"
             if self.chk_set_zero.get_active() :
                 s +=  " X%s"%self.spbtn_offs_x.get_value()      
@@ -339,6 +340,8 @@ class ProbeScreenClass:
 
     def on_btn1_set_angle_released(self, gtkbutton, data = None):
         self.prefs.putpref( "ps_offs_angle", self.spbtn_offs_angle.get_value(), float )
+        self.command.mode( linuxcnc.MODE_MDI )
+        self.command.wait_complete()
         s="G10 L2 P0"
         if self.chk_set_zero.get_active() :
             s +=  " X%s"%self.spbtn_offs_x.get_value()      
