@@ -5,7 +5,7 @@
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
-# (at your option) any later version.
+# (at your option) any laforter version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,6 +23,8 @@ import gobject              # needed to add the timer for periodic
 import pygtk
 import gladevcp
 import pango
+import time
+import math
 from linuxcnc import ini
 import ConfigParser
 from datetime import datetime
@@ -68,20 +70,6 @@ class ps_preferences(cp1):
 
 class ProbeScreenClass:
     
-    def error_poll(self):
-        error = self.e.poll()
-        if error:
-            kind, text = error
-            if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
-                typus = "error"
-                print typus, text
-                return -1
-            else:
-                typus = "info"
-                print typus, text
-                return -1
-
-
     def get_preference_file_path(self):
         # we get the preference file, if there is none given in the INI
         # we use toolchange2.pref in the config dir
@@ -96,7 +84,7 @@ class ProbeScreenClass:
         print("****  probe_screen GETINIINFO **** \n Preference file path: %s" % temp)
         return temp
 
-    def add_history(self,tool_tip_text,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.):
+    def add_history(self,tool_tip_text,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.,a=0.):
 #        c = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         c = datetime.now().strftime('%H:%M:%S  ') + '{0: <10}'.format(tool_tip_text)  
         if "Xm" in s : 
@@ -119,9 +107,39 @@ class ProbeScreenClass:
             c += "Z=%.4f "%z
         if "D" in s : 
             c += "D=%.4f"%d
+        if "A" in s : 
+            c += "Angle=%.3f"%a
         i=self.buffer.get_end_iter()
+        if i.get_line() > 1000 :
+            i.backward_line()
+            self.buffer.delete(i,self.buffer.get_end_iter())
         i.set_line(0)
         self.buffer.insert(i, "%s \n" % c)
+
+    def error_poll(self):
+        error = self.e.poll()
+        if error:
+            kind, text = error
+            self.add_history("Error %.0f : %s" % (kind, text),"",0,0,0,0,0,0,0,0,0,0,0)            
+            if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
+
+                typus = "error"
+                print typus, text
+                return -1
+            else:
+                typus = "info"
+                print typus, text
+                return -1
+
+    def probed_position_with_offsets(self) :
+        self.stat.poll()
+        probed_position=list(self.stat.probed_position)
+        g5x_offset=list(self.stat.g5x_offset)
+        g92_offset=list(self.stat.g92_offset)
+        tool_offset=list(self.stat.tool_offset)
+        for i in range(0, len(probed_position)-1):
+             probed_position[i] = probed_position[i] - g5x_offset[i] - g92_offset[i] - tool_offset[i]
+        return probed_position
 
 
     # Set Zero check
@@ -129,15 +147,19 @@ class ProbeScreenClass:
         self.halcomp["set_zero"] = gtkcheckbutton.get_active()
         self.hal_led_set_zero.hal_pin.set(gtkcheckbutton.get_active())
         self.prefs.putpref( "chk_set_zero", gtkcheckbutton.get_active(), bool )
-#        i=self.buffer.get_end_iter()
-#        i.set_line(0)
-#        self.buffer.insert(i, "Set Zero = %s\n" % gtkcheckbutton.get_active())
+
+    # Auto Rott check
+    def on_chk_auto_rott_toggled( self, gtkcheckbutton, data = None ):
+        self.halcomp["auto_rott"] = gtkcheckbutton.get_active()
+        self.hal_led_auto_rott.hal_pin.set(gtkcheckbutton.get_active())
+        self.prefs.putpref( "chk_auto_rott", gtkcheckbutton.get_active(), bool )
+
 
     def set_zerro(self,s="XYZ",x=0.,y=0.,z=0.):
         if self.chk_set_zero.get_active() :
             #  Z current position
             self.stat.poll()
-            tmpz=self.stat.position[2]
+            tmpz=self.stat.position[2]-self.stat.g5x_offset[2] - self.stat.g92_offset[2] - self.stat.tool_offset[2]
             c = "G10 L20 P0"
             s=s.upper()
             if "X" in s :
@@ -150,6 +172,25 @@ class ProbeScreenClass:
                 tmpz=tmpz-z+self.spbtn_offs_z.get_value() 
                 c += " Z%s"%tmpz
             self.gcode(c)
+            time.sleep(2)
+
+    def rotateXY(self,a=0.):
+        if self.chk_auto_rott.get_active() :
+            self.spbtn_offs_angle.set_value(math.degrees(a))
+            s="G10 L2 P0"
+            if self.chk_set_zero.get_active() :
+                s +=  " X%s"%self.spbtn_offs_x.get_value()      
+                s +=  " Y%s"%self.spbtn_offs_y.get_value()      
+            else :
+                self.stat.poll()
+                x=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0]
+                y=self.stat.position[1]-self.stat.g5x_offset[1] - self.stat.g92_offset[1] - self.stat.tool_offset[1]
+                s +=  " X%s"%x      
+                s +=  " Y%s"%y      
+            s +=  " R%s"%a                      
+            self.gcode(s)
+            time.sleep(2)
+                
 
     # Spin buttons
 
@@ -196,6 +237,10 @@ class ProbeScreenClass:
     def on_spbtn_offs_z_value_changed( self, gtkspinbutton, data = None ):
         self.halcomp["ps_offs_z"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_offs_z", gtkspinbutton.get_value(), float )
+
+    def on_spbtn_offs_angle_value_changed( self, gtkspinbutton, data = None ):
+        self.halcomp["ps_offs_angle"] = gtkspinbutton.get_value()
+        self.prefs.putpref( "ps_offs_angle", gtkspinbutton.get_value(), float )
 
     def gcode(self,s, data = None): 
         for l in s.split("\n"):
@@ -272,25 +317,41 @@ class ProbeScreenClass:
 
     # --------------  Touch off buttons -----------------
     def on_btn1_set_x_released(self, gtkbutton, data = None):
+        self.prefs.putpref( "ps_offs_x", self.spbtn_offs_x.get_value(), float )
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         self.command.mdi( "G10 L20 P0 X%f" % self.spbtn_offs_x.get_value() )
-        self.command.wait_complete()
-        self.prefs.putpref( "ps_offs_x", self.spbtn_offs_x.get_value(), float )
+        time.sleep(2)
 
     def on_btn1_set_y_released(self, gtkbutton, data = None):
+        self.prefs.putpref( "ps_offs_y", self.spbtn_offs_y.get_value(), float )
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         self.command.mdi( "G10 L20 P0 Y%f" % self.spbtn_offs_y.get_value() )
-        self.command.wait_complete()
-        self.prefs.putpref( "ps_offs_y", self.spbtn_offs_y.get_value(), float )
+        time.sleep(2)
 
     def on_btn1_set_z_released(self, gtkbutton, data = None):
+        self.prefs.putpref( "ps_offs_z", self.spbtn_offs_z.get_value(), float )
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         self.command.mdi( "G10 L20 P0 Z%f" % self.spbtn_offs_z.get_value() )
-        self.command.wait_complete()
-        self.prefs.putpref( "ps_offs_z", self.spbtn_offs_z.get_value(), float )
+        time.sleep(2)
+
+    def on_btn1_set_angle_released(self, gtkbutton, data = None):
+        self.prefs.putpref( "ps_offs_angle", self.spbtn_offs_angle.get_value(), float )
+        s="G10 L2 P0"
+        if self.chk_set_zero.get_active() :
+            s +=  " X%s"%self.spbtn_offs_x.get_value()      
+            s +=  " Y%s"%self.spbtn_offs_y.get_value()      
+        else :
+            self.stat.poll()
+            x=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0]
+            y=self.stat.position[1]-self.stat.g5x_offset[1] - self.stat.g92_offset[1] - self.stat.tool_offset[1]
+            s +=  " X%s"%x      
+            s +=  " Y%s"%y      
+        s +=  " R%s"%math.radians(self.spbtn_offs_angle.get_value())                      
+        self.gcode(s)
+        time.sleep(2)
 
 
        
@@ -304,9 +365,9 @@ class ProbeScreenClass:
         # Start down.ngc
         if self.ocode ("O<down> call") == -1:
             return
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         self.lb_probe_z.set_text( "%.4f" % float(a[2]) )
-        self.add_history(gtkbutton.get_tooltip_text(),"Z",0,0,0,0,0,0,0,0,a[2],0)
+        self.add_history(gtkbutton.get_tooltip_text(),"Z",0,0,0,0,0,0,0,0,a[2],0,0)
         self.set_zerro("Z",0,0,a[2])
     # X+
     def on_xp_released(self, gtkbutton, data = None):
@@ -323,10 +384,10 @@ class ProbeScreenClass:
        # Start xplus.ngc
         if self.ocode ("O<xplus> call") == -1:
             return
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         res=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % res )
-        self.add_history(gtkbutton.get_tooltip_text(),"XpLx",0,0,res,self.lenght_x(),0,0,0,0,0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XpLx",0,0,res,self.lenght_x(),0,0,0,0,0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -350,11 +411,11 @@ class ProbeScreenClass:
         # Start yplus.ngc
         if self.ocode ("O<yplus> call") == -1:
             return
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         res=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % res )
         self.lenght_y()
-        self.add_history(gtkbutton.get_tooltip_text(),"YpLy",0,0,0,0,0,0,res,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"YpLy",0,0,0,0,0,0,res,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -378,10 +439,10 @@ class ProbeScreenClass:
         # Start xminus.ngc
         if self.ocode ("O<xminus> call") == -1:
             return
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         res=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % res )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmLx",res,0,0,self.lenght_x(),0,0,0,0,0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmLx",res,0,0,self.lenght_x(),0,0,0,0,0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -405,10 +466,10 @@ class ProbeScreenClass:
         # Start yminus.ngc
         if self.ocode ("O<yminus> call") == -1:
             return
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         res=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % res )
-        self.add_history(gtkbutton.get_tooltip_text(),"YmLy",0,0,0,0,res,0,0,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"YmLy",0,0,0,0,res,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -435,7 +496,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
         # move Z to start point up
@@ -455,10 +516,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -483,7 +544,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xres )
         # move Z to start point up
@@ -503,10 +564,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -531,7 +592,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
         # move Z to start point up
@@ -551,10 +612,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -579,7 +640,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
         # move Z to start point up
@@ -599,10 +660,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -627,7 +688,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xpres )
         # move Z to start point up
@@ -644,17 +705,18 @@ class ProbeScreenClass:
         if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
+
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xmres )
         xcres=0.5*(xpres+xmres)
         self.lb_probe_xc.set_text( "%.4f" % xcres )
         # distance to the new center of X from current position
         self.stat.poll()
-        to_new_xc=self.stat.position[0]-xcres
+        to_new_xc=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0] - xcres
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -673,7 +735,7 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % ypres )
         # move Z to start point up
@@ -693,7 +755,7 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % ymres )
         self.lenght_y()
@@ -702,7 +764,7 @@ class ProbeScreenClass:
         self.lb_probe_yc.set_text( "%.4f" % ycres )
         diam=0.5*((xmres-xpres)+(ymres-ypres))
         self.lb_probe_d.set_text( "%.4f" % diam )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -733,7 +795,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
 
@@ -748,10 +810,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYpLy",0,0,xres,self.lenght_x(),0,0,yres,self.lenght_y(),0,0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
@@ -776,7 +838,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
 
@@ -791,10 +853,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
@@ -819,7 +881,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
 
@@ -835,10 +897,10 @@ class ProbeScreenClass:
             return
 
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYpLy",xres,0,0,self.lenght_x(),0,0,yres,self.lenght_y(),0,0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
@@ -863,7 +925,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xres )
 
@@ -878,10 +940,10 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point
         if self.z_clearance_up() == -1:
             return
@@ -907,7 +969,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xm.set_text( "%.4f" % xmres )
 
@@ -922,7 +984,7 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         # show X result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xp.set_text( "%.4f" % xpres )
         xcres=0.5*(xmres+xpres)
@@ -944,7 +1006,7 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_ym.set_text( "%.4f" % ymres )
 
@@ -959,7 +1021,7 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         # show Y result
-        a=self.stat.probed_position
+        a=self.probed_position_with_offsets()
         ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % ypres )
         # find, show and move to finded  point
@@ -967,13 +1029,205 @@ class ProbeScreenClass:
         self.lb_probe_yc.set_text( "%.4f" % ycres )
         diam=0.5*((xpres-xmres)+(ypres-ymres))
         self.lb_probe_d.set_text( "%.4f" % diam )
-        self.add_history(gtkbutton.get_tooltip_text(),"XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam)
+        self.add_history(gtkbutton.get_tooltip_text(),"XmXcXpLxYmYcYpLyD",xmres,xcres,xpres,self.lenght_x(),ymres,ycres,ypres,self.lenght_y(),0,diam,0)
         # move to center
         self.command.mdi( "G1 Y%f" % ycres)
         self.command.wait_complete()
         # move Z to start point
         self.z_clearance_up()
         self.set_zerro("XY")
+
+    # --------------  Command buttons -----------------
+    #               Measurement angle
+    # -------------------------------------------------
+
+    # Angle
+    # Move Probe manual under corner 2-3 mm
+    # Y+Y+ 
+    def on_angle_yp_released(self, gtkbutton, data = None):
+        self.stat.poll()
+        xstart=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0]
+        self.command.mode( linuxcnc.MODE_MDI )
+        self.command.wait_complete()
+        # move Y - xy_clearance
+        s="""G91
+        G1 Y-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start yplus.ngc
+        if self.ocode ("O<yplus> call") == -1:
+            return
+        # show Y result
+        a=self.probed_position_with_offsets()
+        ycres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_yc.set_text( "%.4f" % ycres )
+
+        # move X + edge_lenght
+        s="""G91
+        G1 X%f
+        G90""" % (self.spbtn1_edge_lenght.get_value())        
+        if self.gcode(s) == -1:
+            return
+        # Start yplus.ngc
+        if self.ocode ("O<yplus> call") == -1:
+            return
+        # show Y result
+        a=self.probed_position_with_offsets()
+        ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_yp.set_text( "%.4f" % ypres )
+        alfa=math.atan2(ypres-ycres,self.spbtn1_edge_lenght.get_value())
+        self.add_history(gtkbutton.get_tooltip_text(),"YcYpA",0,0,0,0,0,ycres,ypres,0,0,0,math.degrees(alfa))
+
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
+        # move XY to adj start point
+        s="G1 X%f Y%f" % (xstart,ycres)
+        if self.gcode(s) == -1:
+            return
+        self.rotateXY(alfa)
+
+    # Y-Y- 
+    def on_angle_ym_released(self, gtkbutton, data = None):
+        self.stat.poll()
+        xstart=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0]
+        self.command.mode( linuxcnc.MODE_MDI )
+        self.command.wait_complete()
+        # move Y + xy_clearance
+        s="""G91
+        G1 Y%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
+            return
+        # show Y result
+        a=self.probed_position_with_offsets()
+        ycres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_yc.set_text( "%.4f" % ycres )
+
+        # move X - edge_lenght
+        s="""G91
+        G1 X-%f
+        G90""" % (self.spbtn1_edge_lenght.get_value())        
+        if self.gcode(s) == -1:
+            return
+        # Start yminus.ngc
+        if self.ocode ("O<yminus> call") == -1:
+            return
+        # show Y result
+        a=self.probed_position_with_offsets()
+        ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_ym.set_text( "%.4f" % ymres )
+        alfa=math.atan2(ycres-ymres,self.spbtn1_edge_lenght.get_value())
+        self.add_history(gtkbutton.get_tooltip_text(),"YmYcA",0,0,0,0,ymres,ycres,0,0,0,0,math.degrees(alfa))
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
+        # move XY to adj start point
+        s="G1 X%f Y%f" % (xstart,ycres)
+        if self.gcode(s) == -1:
+            return
+        self.rotateXY(alfa)
+
+    # X+X+ 
+    def on_angle_xp_released(self, gtkbutton, data = None):
+        self.stat.poll()
+        ystart=self.stat.position[1]-self.stat.g5x_offset[1] - self.stat.g92_offset[1] - self.stat.tool_offset[1]
+        self.command.mode( linuxcnc.MODE_MDI )
+        self.command.wait_complete()
+        # move X - xy_clearance
+        s="""G91
+        G1 X-%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start xplus.ngc
+        if self.ocode ("O<xplus> call") == -1:
+            return
+        # show X result
+        a=self.probed_position_with_offsets()
+        xcres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xc.set_text( "%.4f" % xcres )
+
+        # move Y + edge_lenght
+        s="""G91
+        G1 Y%f
+        G90""" % (self.spbtn1_edge_lenght.get_value())        
+        if self.gcode(s) == -1:
+            return
+        # Start xplus.ngc
+        if self.ocode ("O<xplus> call") == -1:
+            return
+        # show X result
+        a=self.probed_position_with_offsets()
+        xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xp.set_text( "%.4f" % xpres )
+        alfa=math.atan2(xcres-xpres,self.spbtn1_edge_lenght.get_value())
+        self.add_history(gtkbutton.get_tooltip_text(),"XcXpA",0,xcres,xpres,0,0,0,0,0,0,0,math.degrees(alfa))
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
+        # move XY to adj start point
+        s="G1 X%f Y%f" % (xcres,ystart)
+        if self.gcode(s) == -1:
+            return
+        self.rotateXY(alfa)
+
+    # X-X- 
+    def on_angle_xm_released(self, gtkbutton, data = None):
+        self.stat.poll()
+        ystart=self.stat.position[1]-self.stat.g5x_offset[1] - self.stat.g92_offset[1] - self.stat.tool_offset[1]
+        self.command.mode( linuxcnc.MODE_MDI )
+        self.command.wait_complete()
+        # move X + xy_clearance
+        s="""G91
+        G1 X%f
+        G90""" % (self.spbtn1_xy_clearance.get_value() )        
+        if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
+            return
+        # Start xminus.ngc
+        if self.ocode ("O<xminus> call") == -1:
+            return
+        # show X result
+        a=self.probed_position_with_offsets()
+        xcres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xc.set_text( "%.4f" % xcres )
+
+        # move Y + edge_lenght
+        s="""G91
+        G1 Y%f
+        G90""" % (self.spbtn1_edge_lenght.get_value())        
+        if self.gcode(s) == -1:
+            return
+        # Start xminus.ngc
+        if self.ocode ("O<xminus> call") == -1:
+            return
+        # show X result
+        a=self.probed_position_with_offsets()
+        xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
+        self.lb_probe_xm.set_text( "%.4f" % xmres )
+        alfa=math.atan2(xcres-xmres,self.spbtn1_edge_lenght.get_value())
+        self.add_history(gtkbutton.get_tooltip_text(),"XmXcA",xmres,xcres,0,0,0,0,0,0,0,0,math.degrees(alfa))
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
+        # move XY to adj start point
+        s="G1 X%f Y%f" % (xcres,ystart)
+        if self.gcode(s) == -1:
+            return
+        self.rotateXY(alfa)
+
 
 
     def __init__(self, halcomp,builder,useropts):
@@ -992,6 +1246,8 @@ class ProbeScreenClass:
         self.buffer = self.textarea.get_property('buffer')
         self.chk_set_zero = self.builder.get_object("chk_set_zero")
         self.chk_set_zero.set_active( self.prefs.getpref( "chk_set_zero", False, bool ) )
+        self.chk_auto_rott = self.builder.get_object("chk_auto_rott")
+        self.chk_auto_rott.set_active( self.prefs.getpref( "chk_auto_rott", False, bool ) )
         self.xpym = self.builder.get_object("xpym")
         self.ym = self.builder.get_object("ym")
         self.xmym = self.builder.get_object("xmym")
@@ -1015,10 +1271,12 @@ class ProbeScreenClass:
         self.spbtn1_edge_lenght = self.builder.get_object("spbtn1_edge_lenght")
 
         self.hal_led_set_zero = self.builder.get_object("hal_led_set_zero")
+        self.hal_led_auto_rott = self.builder.get_object("hal_led_auto_rott")
 
         self.spbtn_offs_x = self.builder.get_object("spbtn_offs_x")
         self.spbtn_offs_y = self.builder.get_object("spbtn_offs_y")
         self.spbtn_offs_z = self.builder.get_object("spbtn_offs_z")
+        self.spbtn_offs_angle = self.builder.get_object("spbtn_offs_angle")
 
         self.lb_probe_xp = self.builder.get_object("lb_probe_xp")
         self.lb_probe_yp = self.builder.get_object("lb_probe_yp")
@@ -1045,10 +1303,15 @@ class ProbeScreenClass:
         self.halcomp.newpin( "ps_offs_x", hal.HAL_FLOAT, hal.HAL_OUT )
         self.halcomp.newpin( "ps_offs_y", hal.HAL_FLOAT, hal.HAL_OUT )
         self.halcomp.newpin( "ps_offs_z", hal.HAL_FLOAT, hal.HAL_OUT )
+        self.halcomp.newpin( "ps_offs_angle", hal.HAL_FLOAT, hal.HAL_OUT )
         self.halcomp.newpin( "set_zero", hal.HAL_BIT, hal.HAL_OUT )
         if self.chk_set_zero.get_active():
             self.halcomp["set_zero"] = True
             self.hal_led_set_zero.hal_pin.set(1)
+        self.halcomp.newpin( "auto_rott", hal.HAL_BIT, hal.HAL_OUT )
+        if self.chk_auto_rott.get_active():
+            self.halcomp["auto_rott"] = True
+            self.hal_led_auto_rott.hal_pin.set(1)
 #        self.halcomp.newpin( "ps_simulate", hal.HAL_BIT, hal.HAL_OUT )
         self.spbtn1_search_vel.set_value( self.prefs.getpref( "ps_searchvel", 300.0, float ) )
         self.spbtn1_probe_vel.set_value( self.prefs.getpref( "ps_probevel", 10.0, float ) )
@@ -1062,6 +1325,7 @@ class ProbeScreenClass:
         self.spbtn_offs_x.set_value( self.prefs.getpref( "ps_offs_x", 0.0, float ) )
         self.spbtn_offs_y.set_value( self.prefs.getpref( "ps_offs_x", 0.0, float ) )
         self.spbtn_offs_z.set_value( self.prefs.getpref( "ps_offs_x", 0.0, float ) )
+        self.spbtn_offs_angle.set_value( self.prefs.getpref( "ps_offs_angle", 0.0, float ) )
 
         self.halcomp["ps_searchvel"] = self.spbtn1_search_vel.get_value()
         self.halcomp["ps_probevel"] = self.spbtn1_probe_vel.get_value()
@@ -1074,6 +1338,7 @@ class ProbeScreenClass:
         self.halcomp["ps_offs_x"] = self.spbtn_offs_x.get_value()
         self.halcomp["ps_offs_y"] = self.spbtn_offs_y.get_value()
         self.halcomp["ps_offs_z"] = self.spbtn_offs_z.get_value()
+        self.halcomp["ps_offs_angle"] = self.spbtn_offs_angle.get_value()
 #        self.halcomp["ps_simulate"] = 1
 
 

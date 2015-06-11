@@ -1,6 +1,6 @@
 o<down> sub
 	
-O<down-if> IF [#<_hal[probe.set_zero]> EQ 0]
+O<down-if> IF [#<_hal[probe.set_zero]> EQ 5]
     (cancel Z offsets)
     G92.1
     G49

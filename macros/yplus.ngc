@@ -1,9 +1,4 @@
 o<yplus> sub
-
-(cancel Y offsets)
-G92.1
-G49
-G10 L20 P0 Y[#<_hal[axis.1.joint-pos-cmd]>]
  	
 #<y>=#<_y> (save start Y position) 
 G91

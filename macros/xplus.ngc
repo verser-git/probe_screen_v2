@@ -1,9 +1,4 @@
 o<xplus> sub
-
-(cancel X offsets)
-G92.1
-G49
-G10 L20 P0  X[#<_hal[axis.0.joint-pos-cmd]>]
 	
 #<x>=#<_x> (save start X position) 
 G91
