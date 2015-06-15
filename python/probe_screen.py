@@ -437,7 +437,6 @@ class ProbeScreenClass:
         if self.ocode ("O<xplus> call") == -1:
             return
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]+0.5*self.spbtn1_probe_diam.get_value())
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
@@ -467,7 +466,6 @@ class ProbeScreenClass:
         if self.ocode ("O<yplus> call") == -1:
             return
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
@@ -497,9 +495,8 @@ class ProbeScreenClass:
         if self.ocode ("O<xminus> call") == -1:
             return
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]-0.5*self.spbtn1_probe_diam.get_value())
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
         self.add_history(gtkbutton.get_tooltip_text(),"XmLx",xres,0,0,self.lenght_x(),0,0,0,0,0,0,0)
         # move Z to start point up
@@ -527,9 +524,8 @@ class ProbeScreenClass:
         if self.ocode ("O<yminus> call") == -1:
             return
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
+        self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
         self.add_history(gtkbutton.get_tooltip_text(),"YmLy",0,0,0,0,yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
@@ -560,7 +556,6 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]+0.5*self.spbtn1_probe_diam.get_value())
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
@@ -582,7 +577,6 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
@@ -613,7 +607,6 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]+0.5*self.spbtn1_probe_diam.get_value())
         self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
@@ -635,9 +628,8 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
+        self.lb_probe_ym.set_text( "%.4f" % yres )
         self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
@@ -665,9 +657,8 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]-0.5*self.spbtn1_probe_diam.get_value())
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
@@ -687,7 +678,6 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yp.set_text( "%.4f" % yres )
         self.lenght_y()
@@ -718,9 +708,8 @@ class ProbeScreenClass:
             return
         # show X result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         xres=float(a[0]-0.5*self.spbtn1_probe_diam.get_value())
-        self.lb_probe_xp.set_text( "%.4f" % xres )
+        self.lb_probe_xm.set_text( "%.4f" % xres )
         self.lenght_x()
         # move Z to start point up
         if self.z_clearance_up() == -1:
@@ -740,9 +729,8 @@ class ProbeScreenClass:
             return
         # show Y result
         a=self.probed_position_with_offsets()
-        print "probed position=",a
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
+        self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
         self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point up
@@ -884,7 +872,7 @@ class ProbeScreenClass:
         # show X result
         a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xm.set_text( "%.4f" % xres )
+        self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X - edge_lenght Y - xy_clearance
@@ -930,7 +918,7 @@ class ProbeScreenClass:
         # show X result
         a=self.probed_position_with_offsets()
         xres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xm.set_text( "%.4f" % xres )
+        self.lb_probe_xp.set_text( "%.4f" % xres )
         self.lenght_x()
 
         # move X - edge_lenght Y + xy_clearance
@@ -946,7 +934,7 @@ class ProbeScreenClass:
         # show Y result
         a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
+        self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
         self.add_history(gtkbutton.get_tooltip_text(),"XpLxYmLy",0,0,xres,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point
@@ -1039,7 +1027,7 @@ class ProbeScreenClass:
         # show Y result
         a=self.probed_position_with_offsets()
         yres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % yres )
+        self.lb_probe_ym.set_text( "%.4f" % yres )
         self.lenght_y()
         self.add_history(gtkbutton.get_tooltip_text(),"XmLxYmLy",xres,0,0,self.lenght_x(),yres,0,0,self.lenght_y(),0,0,0)
         # move Z to start point
