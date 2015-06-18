@@ -186,7 +186,9 @@ class ProbeScreenClass:
              coord[i] = probed_position[i] - g5x_offset[i] - g92_offset[i] - tool_offset[i]
         angl=self.stat.rotation_xy
         res=self.rott00_point(coord[0],coord[1],-angl)
-        return res
+        coord[0]=res[0]
+        coord[1]=res[1]
+        return coord
 
 
     # Set Zero check
