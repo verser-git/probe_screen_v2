@@ -28,6 +28,7 @@ import math
 from linuxcnc import ini
 import ConfigParser
 from datetime import datetime
+from subprocess import Popen, PIPE
 
 CONFIGPATH1 = os.environ['CONFIG_DIR']
 
@@ -84,6 +85,13 @@ class ProbeScreenClass:
         print("****  probe_screen GETINIINFO **** \n Preference file path: %s" % temp)
         return temp
 
+    def get_display(self):
+        # gmoccapy or axis ?
+        temp = self.inifile.find("DISPLAY", "DISPLAY")
+        if not temp:
+            print("****  probe_screen GETINIINFO **** \n Error recognition of display type : %s" % temp)
+        return temp
+
     def add_history(self,tool_tip_text,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.,a=0.):
 #        c = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         c = datetime.now().strftime('%H:%M:%S  ') + '{0: <10}'.format(tool_tip_text)  
@@ -118,6 +126,10 @@ class ProbeScreenClass:
 
     def error_poll(self):
         error = self.e.poll()
+        if "axis" in self.display:
+            error_pin= Popen('halcmd getp probe.user.error ', shell=True, stdout=PIPE).stdout.read()
+        else:
+            error_pin= Popen('halcmd getp gmoccapy.error ', shell=True, stdout=PIPE).stdout.read()
         if error:
             kind, text = error
             self.add_history("Error: %s" % text,"",0,0,0,0,0,0,0,0,0,0,0)            
@@ -130,6 +142,14 @@ class ProbeScreenClass:
                 typus = "info"
                 print typus, text
                 return -1
+        else:
+            if "TRUE" in error_pin:
+                text = "User probe error"
+                self.add_history("Error: %s" % text,"",0,0,0,0,0,0,0,0,0,0,0)            
+                typus = "error"
+                print typus, text
+                return -1
+        return 0
 
 
 
@@ -359,11 +379,6 @@ class ProbeScreenClass:
         self.lb_probe_ly.set_text("%.4f" % res)
         return res
 
-    # Simulate
-#    def on_simulate_pressed(self, data = None):
-#        self.halcomp["ps_simulate"] = 0
-#    def on_simulate_released(self, data = None):
-#        self.halcomp["ps_simulate"] = 1
 
     # --------------  Touch off buttons -----------------
     def on_btn1_set_x_released(self, gtkbutton, data = None):
@@ -1328,12 +1343,15 @@ class ProbeScreenClass:
         if not self.inifile:
             print("**** probe_screen GETINIINFO **** \n Error, no INI File given !!")
             sys.exit()
+        self.display = self.get_display() or "unknown"
         self.command = linuxcnc.command()
         self.stat = linuxcnc.stat()
         self.builder = builder
         self.prefs = ps_preferences( self.get_preference_file_path() )
-        self.e = linuxcnc.error_channel()
         self.textarea = builder.get_object("textview1")
+        self.e = linuxcnc.error_channel()
+        self.stat.poll()
+        self.e.poll()
 
         self.buffer = self.textarea.get_property('buffer')
         self.chk_set_zero = self.builder.get_object("chk_set_zero")
@@ -1404,7 +1422,7 @@ class ProbeScreenClass:
         if self.chk_auto_rott.get_active():
             self.halcomp["auto_rott"] = True
             self.hal_led_auto_rott.hal_pin.set(1)
-#        self.halcomp.newpin( "ps_simulate", hal.HAL_BIT, hal.HAL_OUT )
+        self.halcomp.newpin( "ps_error", hal.HAL_FLOAT, hal.HAL_OUT )
         self.spbtn1_search_vel.set_value( self.prefs.getpref( "ps_searchvel", 300.0, float ) )
         self.spbtn1_probe_vel.set_value( self.prefs.getpref( "ps_probevel", 10.0, float ) )
         self.spbtn1_z_clearance.set_value( self.prefs.getpref( "ps_z_clearance", 3.0, float ) )
@@ -1431,8 +1449,10 @@ class ProbeScreenClass:
         self.halcomp["ps_offs_y"] = self.spbtn_offs_y.get_value()
         self.halcomp["ps_offs_z"] = self.spbtn_offs_z.get_value()
         self.halcomp["ps_offs_angle"] = self.spbtn_offs_angle.get_value()
-#        self.halcomp["ps_simulate"] = 1
-
+        self.halcomp["ps_error"] = 0.
 
 def get_handlers(halcomp,builder,useropts):
     return [ProbeScreenClass(halcomp,builder,useropts)]
+
+if __name__ == "__main__":
+    main()
