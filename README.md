@@ -46,7 +46,9 @@ your-folder-configuration/probe_icons
 all from folder "probe_icons"
 ```
 ~/
+```sh
 .axisrc
+```
 If you are already using .axisrc, then only add to your file contents of this .axisrc.
 
 Use.
