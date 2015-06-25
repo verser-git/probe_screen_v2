@@ -1453,6 +1453,3 @@ class ProbeScreenClass:
 
 def get_handlers(halcomp,builder,useropts):
     return [ProbeScreenClass(halcomp,builder,useropts)]
-
-if __name__ == "__main__":
-    main()
