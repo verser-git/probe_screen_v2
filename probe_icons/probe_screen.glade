@@ -234,7 +234,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="tooltip_text" translatable="yes">Cilinder</property>
+                                <property name="tooltip_text" translatable="yes">Cylinder</property>
                                 <signal name="released" handler="on_xy_center_released"/>
                                 <child>
                                   <object class="GtkImage" id="image9">
@@ -1187,7 +1187,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkCheckButton" id="chk_auto_rott">
-                                    <property name="label" translatable="yes">Auto Rott</property>
+                                    <property name="label" translatable="yes">Auto Rot</property>
                                     <property name="height_request">26</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -1434,7 +1434,7 @@
                             <child>
                               <object class="GtkLabel" id="lb_probe_a">
                                 <property name="visible">True</property>
-                                <property name="tooltip_text" translatable="yes">&#x410;ngle of rotation</property>
+                                <property name="tooltip_text" translatable="yes">Angle of rotation</property>
                                 <property name="width_chars">18</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
@@ -1519,7 +1519,7 @@
                             <child>
                               <object class="GtkImage" id="im_probe_a">
                                 <property name="visible">True</property>
-                                <property name="tooltip_text" translatable="yes">&#x410;ngle of rotation</property>
+                                <property name="tooltip_text" translatable="yes">Angle of rotation</property>
                                 <property name="xalign">0</property>
                                 <property name="pixbuf">probe_a.png</property>
                               </object>

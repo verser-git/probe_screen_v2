@@ -217,7 +217,7 @@ class ProbeScreenClass:
         self.hal_led_set_zero.hal_pin.set(gtkcheckbutton.get_active())
         self.prefs.putpref( "chk_set_zero", gtkcheckbutton.get_active(), bool )
 
-    # Auto Rott check
+    # Auto Rot check
     def on_chk_auto_rott_toggled( self, gtkcheckbutton, data = None ):
         self.halcomp["auto_rott"] = gtkcheckbutton.get_active()
         self.hal_led_auto_rott.hal_pin.set(gtkcheckbutton.get_active())
