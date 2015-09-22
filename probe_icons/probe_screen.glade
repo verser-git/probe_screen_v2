@@ -35,7 +35,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <property name="tooltip_text" translatable="yes">Y+     </property>
+                                <property name="tooltip_text" translatable="yes">Y+    </property>
                                 <property name="yalign">0</property>
                                 <signal name="released" handler="on_yp_released"/>
                                 <child>

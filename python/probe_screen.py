@@ -262,7 +262,7 @@ class ProbeScreenClass:
             time.sleep(1)
                 
 
-    # Spin buttons
+    # Spin  buttons
 
     def on_spbtn1_search_vel_value_changed( self, gtkspinbutton, data = None ):
         self.halcomp["ps_searchvel"] = gtkspinbutton.get_value()
