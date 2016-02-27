@@ -20,8 +20,8 @@ SUBROUTINE_PATH = your_subroutine_path
 
 ......
 [TOOLSENSOR]
-# Control probe rappid feed
-RAPID_FEED = 600
+# Control probe rapid speed
+RAPID_SPEED = 600
 ```
 This application can be easily connected to Gmoccapy, differ only in lines for panel connection
 ```sh
