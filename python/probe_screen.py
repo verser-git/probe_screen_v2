@@ -264,51 +264,149 @@ class ProbeScreenClass:
 
     # Spin  buttons
 
+    def on_spbtn1_search_vel_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+#        print "Key %s (%d) was pressed" % (keyname, data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_probe_vel_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_probe_max_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_probe_latch_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_probe_diam_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_xy_clearance_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_edge_lenght_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn1_z_clearance_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn_offs_x_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn_offs_y_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn_offs_z_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
+    def on_spbtn_offs_angle_key_press_event( self, gtkspinbutton, data = None ):
+        keyname = gtk.gdk.keyval_name(data.keyval)
+        if keyname == "Return" :
+            gtkspinbutton.modify_font(pango.FontDescription('normal'))
+        else :
+            gtkspinbutton.modify_font(pango.FontDescription('italic'))
+
     def on_spbtn1_search_vel_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal '))
         self.halcomp["ps_searchvel"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_searchvel", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_probe_vel_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_probevel"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_probevel", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_probe_max_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_probe_max"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_probe_max", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_probe_latch_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_probe_latch"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_probe_latch", gtkspinbutton.get_value(), float )
+        print "on_spbtn1_probe_latch_value_changed"
 
     def on_spbtn1_probe_diam_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_probe_diam"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_probe_diam", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_xy_clearance_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_xy_clearance"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_xy_clearance", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_edge_lenght_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_edge_lenght"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_edge_lenght", gtkspinbutton.get_value(), float )
 
     def on_spbtn1_z_clearance_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_z_clearance"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_z_clearance", gtkspinbutton.get_value(), float )
 
     def on_spbtn_offs_x_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_offs_x"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_offs_x", gtkspinbutton.get_value(), float )
 
     def on_spbtn_offs_y_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_offs_y"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_offs_y", gtkspinbutton.get_value(), float )
 
     def on_spbtn_offs_z_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_offs_z"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_offs_z", gtkspinbutton.get_value(), float )
 
     def on_spbtn_offs_angle_value_changed( self, gtkspinbutton, data = None ):
+        gtkspinbutton.modify_font(pango.FontDescription('normal'))
         self.halcomp["ps_offs_angle"] = gtkspinbutton.get_value()
         self.prefs.putpref( "ps_offs_angle", gtkspinbutton.get_value(), float )
 

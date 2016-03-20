@@ -314,6 +314,7 @@
                                 <property name="digits">1</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_search_vel_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_search_vel_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -398,6 +399,7 @@
                                 <property name="digits">2</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_probe_vel_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_probe_vel_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -419,6 +421,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_probe_max_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_probe_max_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -440,6 +443,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_probe_diam_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_probe_diam_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -461,6 +465,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_xy_clearance_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_xy_clearance_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -482,6 +487,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_edge_lenght_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_edge_lenght_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -516,6 +522,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_probe_latch_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_probe_latch_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -550,6 +557,7 @@
                                 <property name="digits">3</property>
                                 <property name="numeric">True</property>
                                 <signal name="value_changed" handler="on_spbtn1_z_clearance_value_changed"/>
+                                <signal name="key_press_event" handler="on_spbtn1_z_clearance_key_press_event"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -1028,6 +1036,7 @@
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
                                     <signal name="value_changed" handler="on_spbtn_offs_x_value_changed"/>
+                                    <signal name="key_press_event" handler="on_spbtn_offs_x_key_press_event"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">1</property>
@@ -1048,6 +1057,7 @@
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
                                     <signal name="value_changed" handler="on_spbtn_offs_y_value_changed"/>
+                                    <signal name="key_press_event" handler="on_spbtn_offs_y_key_press_event"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">2</property>
@@ -1068,6 +1078,7 @@
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
                                     <signal name="value_changed" handler="on_spbtn_offs_z_value_changed"/>
+                                    <signal name="key_press_event" handler="on_spbtn_offs_z_key_press_event"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">3</property>
@@ -1170,13 +1181,13 @@
                                     <property name="height_request">26</property>
                                     <property name="visible">True</property>
                                     <property name="tooltip_text" translatable="yes">On - auto set, Off - only measurement</property>
+                                    <property name="on_color">#a0a0a0a0a0a0</property>
                                     <property name="pick_color_off">#a0a0a0a0a0a0</property>
+                                    <property name="blink_color">#a0a0a0a0a0a0</property>
+                                    <property name="led_shiny">True</property>
                                     <property name="pick_color_blink">#d8d84242ffff</property>
                                     <property name="led_blink_rate">500</property>
-                                    <property name="led_shiny">True</property>
-                                    <property name="blink_color">#a0a0a0a0a0a0</property>
                                     <property name="off_color">#a0a0a0a0a0a0</property>
-                                    <property name="on_color">#a0a0a0a0a0a0</property>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -1208,13 +1219,13 @@
                                     <property name="height_request">25</property>
                                     <property name="visible">True</property>
                                     <property name="tooltip_text" translatable="yes">On - auto rotate, Off - only angle measurement </property>
+                                    <property name="on_color">#a0a0a0a0a0a0</property>
                                     <property name="pick_color_off">#a0a0a0a0a0a0</property>
+                                    <property name="blink_color">#a0a0a0a0a0a0</property>
+                                    <property name="led_shiny">True</property>
                                     <property name="pick_color_blink">#d8d84242ffff</property>
                                     <property name="led_blink_rate">500</property>
-                                    <property name="led_shiny">True</property>
-                                    <property name="blink_color">#a0a0a0a0a0a0</property>
                                     <property name="off_color">#a0a0a0a0a0a0</property>
-                                    <property name="on_color">#a0a0a0a0a0a0</property>
                                   </object>
                                   <packing>
                                     <property name="left_attach">1</property>
@@ -1237,6 +1248,7 @@
                                     <property name="digits">3</property>
                                     <property name="numeric">True</property>
                                     <signal name="value_changed" handler="on_spbtn_offs_angle_value_changed"/>
+                                    <signal name="key_press_event" handler="on_spbtn_offs_angle_key_press_event"/>
                                   </object>
                                   <packing>
                                     <property name="top_attach">5</property>
