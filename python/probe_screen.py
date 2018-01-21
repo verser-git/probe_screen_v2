@@ -1363,9 +1363,9 @@ class ProbeScreenClass:
         xcres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xc.set_text( "%.4f" % xcres )
 
-        # move Y + edge_lenght
+        # move Y - edge_lenght
         s="""G91
-        G1 Y%f
+        G1 Y-%f
         G90""" % (self.spbtn1_edge_lenght.get_value())        
         if self.gcode(s) == -1:
             return
