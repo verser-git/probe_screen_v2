@@ -2,7 +2,7 @@
 
  Install.
 -----------------------------------------------------------------------------
-1. Add to your .ini settings from my-mill.ini
+1. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal
 Note. This application can be easily connected to Gmoccapy, differ only in lines for [DISPLAY] panel
 ```sh
 EMBED_TAB_NAME=Probe Screen 
@@ -17,6 +17,14 @@ EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/pro
 
 3. .axisrc is placed in home ~/ folder.
 If you are already using .axisrc, then only add to your file contents of this .axisrc.
+
+4. Delete (or comment out) from all .hal files lines of the form:
+
+#loadusr -W hal_manualtoolchange
+#net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
+#net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
+#net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
+#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
 
 Use.
 ----------------------------------------------------------------------------------
