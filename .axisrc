@@ -1,3 +1,4 @@
+root_window.tk.call("wm","geometry",".","1024x768")
 def my_error_task(self):
         error = e.poll()
         while error: 

@@ -1,0 +1,21 @@
+%
+o<gotots> sub
+G53 G0 Z[#<_ini[AXIS_2]MAX_LIMIT>]
+G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>]
+G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+(cancel all Z offsets)
+G92.1
+G49
+G10 L20 P0  Z[#<_ini[TOOLSENSOR]Z>]
+
+G91
+F #<_hal[probe.ps_searchvel]>
+G38.2 Z #<_ini[TOOLSENSOR]MAXPROBE>
+G0 Z0.26 (custom value)
+F #<_hal[probe.ps_probevel]>
+G38.2 Z-0.5 (custom value)
+G0 Z4		
+G90
+o<gotots> endsub
+M2
+%

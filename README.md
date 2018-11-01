@@ -16,12 +16,17 @@ EMBED_TAB_COMMAND=halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -u python/pro
 [RS274NGC]
 
 FEATURES=30
-SUBROUTINE_PATH = your_subroutine_path
+SUBROUTINE_PATH = macro
 
 ......
 [TOOLSENSOR]
-# Control probe rapid speed
+X = 10
+Y = 10
+Z = 10
+MAXPROBE = -60
 RAPID_SPEED = 600
+TS_DIAMETER = 10
+REV_ROTATION_SPEED = 300
 ```
 This application can be easily connected to Gmoccapy, differ only in lines for panel connection
 ```sh
@@ -30,25 +35,13 @@ EMBED_TAB_LOCATION = ntb_user_tabs
 EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/probe_screen.glade 
 ```
 
-2. The following files from the archive are placed in:
+2. The following folders from the archive are placed in configuration folder:
 
-your-folder-configuration/python
-```sh
-probe_screen.py
-```
-your-folder-configuration/your_subroutine_path
-```sh
-all from folder "macros"
-```
+/python
+/macros
+/probe_icons
 
-your-folder-configuration/probe_icons
-```sh
-all from folder "probe_icons"
-```
-~/
-```sh
-.axisrc
-```
+3. .axisrc is placed in home ~/ folder.
 If you are already using .axisrc, then only add to your file contents of this .axisrc.
 
 Use.
