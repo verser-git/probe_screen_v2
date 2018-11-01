@@ -19,12 +19,13 @@ EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/pro
 If you are already using .axisrc, then only add to your file contents of this .axisrc.
 
 4. Delete (or comment out) from all .hal files lines of the form:
-
+```sh
 #loadusr -W hal_manualtoolchange
 #net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
 #net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
 #net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
 #net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+```
 
 Use.
 ----------------------------------------------------------------------------------
