@@ -2,33 +2,8 @@
 
  Install.
 -----------------------------------------------------------------------------
-1. Add to your .ini these settings
-
-```sh
-[DISPLAY]
-
-DISPLAY = axis
-
-EMBED_TAB_NAME=Probe Screen 
-EMBED_TAB_COMMAND=halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -u python/probe_screen.py -x {XID} probe_icons/probe_screen.glade 
-
-......
-[RS274NGC]
-
-FEATURES=30
-SUBROUTINE_PATH = macro
-
-......
-[TOOLSENSOR]
-X = 10
-Y = 10
-Z = 10
-MAXPROBE = -60
-RAPID_SPEED = 600
-TS_DIAMETER = 10
-REV_ROTATION_SPEED = 300
-```
-This application can be easily connected to Gmoccapy, differ only in lines for panel connection
+1. Add to your .ini settings from my-mill.ini
+Note. This application can be easily connected to Gmoccapy, differ only in lines for [DISPLAY] panel
 ```sh
 EMBED_TAB_NAME=Probe Screen 
 EMBED_TAB_LOCATION = ntb_user_tabs
@@ -36,9 +11,8 @@ EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/pro
 ```
 
 2. The following folders from the archive are placed in configuration folder:
-
-/python
-/macros
+/python,
+/macros,
 /probe_icons
 
 3. .axisrc is placed in home ~/ folder.

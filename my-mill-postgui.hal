@@ -1,0 +1,18 @@
+# Delete (or comment out) from all .hal files lines of the form:
+
+#loadusr -W hal_manualtoolchange
+#net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
+#net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
+#net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
+#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+
+
+# The next two lines are only needed if the pins had been connected before
+unlinkp iocontrol.0.tool-change
+unlinkp iocontrol.0.tool-changed
+
+# link to auto tool measurement toolchange, so you get the advantage of tool description on change dialog
+net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
+net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
+net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
+net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared

@@ -59,6 +59,7 @@ O500 endif
 
 G90
 G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
+G53 G0 X[#<_ini[CHANGE_POSITION]X>] Y[#<_ini[CHANGE_POSITION]Y>]
 
 #<touch_result> = #5063
 #<probeheight> = #<_hal[probe.probeheight]> 
