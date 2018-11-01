@@ -2,9 +2,12 @@
 
  Install.
 -----------------------------------------------------------------------------
-1. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal
+1. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal, substitute your own constants.
+
 Note. This application can be easily connected to Gmoccapy, differ only in lines for [DISPLAY] panel
 ```sh
+[DISPLAY]
+DISPLAY = gmoccapy
 EMBED_TAB_NAME=Probe Screen 
 EMBED_TAB_LOCATION = ntb_user_tabs
 EMBED_TAB_COMMAND = gladevcp  -x {XID} -u python/probe_screen.py probe_icons/probe_screen.glade 
