@@ -5,9 +5,11 @@
 1. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal, substitute your own constants.
 
 2. The following folders from the archive are placed in configuration folder:
+```sh
 /python,
 /macros,
 /probe_icons
+```
 
 3. .axisrc is placed in home ~/ folder.
 If you are already using .axisrc, then only add to your file contents of this .axisrc.
@@ -35,3 +37,36 @@ In fact, you can use the application immediately after the Home.
 
 
 Any of the search ends at XY moving at the desired point (or edge, or corner, or center), Z remains in the original position.
+
+More info https://vers.by/en/blog/useful-articles/probe-screen
+
+ Установка.
+-----------------------------------------------------------------------------
+1. Добавьте в конфигурационные файлы .ini ...-postgui.hal все настройки из my-mill.ini, my-mill-postgui.hal, примените свои собственные константы.
+
+2. Следующие папки из архива перенесите в папку с конфигурацией станка:
+```sh
+/python,
+/macros,
+/probe_icons
+```
+
+3. Файл .axisrc разместите в папке home ~/.
+Если у Вас уже есть .axisrc, то добавьте в него (в конце) содержимое прилагаемого .axisrc
+
+4. Удалите (или закомментируйте) из всех  .hal файлов строки вида:
+```sh
+#loadusr -W hal_manualtoolchange
+#net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
+#net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
+#net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
+#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+```
+
+Использование.
+----------------------------------------------------------------------------------
+Центроискатель устанавливаем в шпиндель. Подводим в ручном режиме центроискатель по Z приблизительно 2-4 мм над поверхностью заготовки, а по XY примерно в позицию, обозначенную цветной точкой на соответствующей кнопке Probe Screen. Заполняем параметры (названия всплывают при подводе мышки). Параметры при изменениии автоматически сохраняются в .pref
+При изменении значений параметров с помощью клавиатуры (а не мышкой по стрелкам) обязательно нажать Enter для фиксации новых значений
+Использовать только! ту кнопку, которая соответствует позиции центроискателя над заготовкой. Для другой кнопки - другая позиция над заготовкой.
+
+Подробнее см. https://vers.by/ru/blog/useful-articles/probe-screen
