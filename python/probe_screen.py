@@ -359,6 +359,8 @@ class ProbeScreenClass:
 
     def on_btn_jog_pressed( self, widget, data = None ):
         # only in manual mode we will allow jogging the axis at this development state
+        self.command.mode( linuxcnc.MODE_MANUAL )
+        self.command.wait_complete()
         self.stat.poll()
         if not self.stat.task_mode == linuxcnc.MODE_MANUAL:
             return
