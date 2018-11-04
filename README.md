@@ -46,8 +46,8 @@ More info https://vers.by/en/blog/useful-articles/probe-screen
 
 2. Следующие папки из архива перенесите в папку с конфигурацией станка:
 ```sh
-/python,
-/macros,
+/python
+/macros
 /probe_icons
 ```
 
