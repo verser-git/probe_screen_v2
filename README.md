@@ -6,8 +6,8 @@
 
 2. The following folders from the archive are placed in configuration folder:
 ```sh
-/python,
-/macros,
+/python
+/macros
 /probe_icons
 ```
 
