@@ -2010,6 +2010,7 @@ class ProbeScreenClass:
         self.command.wait_complete()
         a=self.stat.probed_position
         self.spbtn_probe_height.set_value( float(a[2]) )
+        self.add_history(gtkbutton.get_tooltip_text(),"Z",0,0,0,0,0,0,0,0,a[2],0,0)
 
     def clicked_btn_probe_workpiece(self, data = None):
         # Start probe_down.ngc
@@ -2023,6 +2024,7 @@ class ProbeScreenClass:
         self.command.wait_complete()
         a=self.stat.probed_position
         self.spbtn_block_height.set_value( float(a[2]) )
+        self.add_history(gtkbutton.get_tooltip_text(),"Z",0,0,0,0,0,0,0,0,a[2],0,0)
 
     def on_chk_use_tool_measurement_toggled( self, gtkcheckbutton, data = None ):
         if gtkcheckbutton.get_active():

@@ -137,6 +137,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y+</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="yalign">0</property>
                                 <signal name="released" handler="on_yp_released" swapped="no"/>
@@ -163,6 +164,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y+X- out</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="yalign">0</property>
@@ -191,6 +193,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+Y+ out</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <property name="yalign">0</property>
@@ -218,6 +221,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <signal name="released" handler="on_xp_released" swapped="no"/>
@@ -243,6 +247,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+Y- out</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <property name="yalign">1</property>
@@ -269,6 +274,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y-</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="yalign">1</property>
                                 <signal name="released" handler="on_ym_released" swapped="no"/>
@@ -294,6 +300,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y-X- out</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="yalign">1</property>
@@ -321,6 +328,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X-</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <signal name="released" handler="on_xm_released" swapped="no"/>
@@ -347,6 +355,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+X-Y+Y- out</property>
                                 <property name="use_action_appearance">False</property>
                                 <signal name="released" handler="on_xy_center_released" swapped="no"/>
                                 <child>
@@ -761,6 +770,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+Y- in</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <property name="yalign">1</property>
@@ -791,6 +801,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y-</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="yalign">1</property>
                                 <signal name="released" handler="on_ym_released" swapped="no"/>
@@ -819,6 +830,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y-X- in</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="yalign">1</property>
@@ -847,6 +859,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X-</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <signal name="released" handler="on_xm_released" swapped="no"/>
@@ -879,6 +892,7 @@
                                   <object class="GtkImage" id="image35">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
+                                    <property name="tooltip_text" translatable="yes">X-X+Y-Y+ in</property>
                                     <property name="pixbuf">inHole.png</property>
                                   </object>
                                 </child>
@@ -899,6 +913,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <signal name="released" handler="on_xp_released" swapped="no"/>
@@ -927,6 +942,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">X+Y+ in</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">1</property>
                                 <property name="yalign">0</property>
@@ -955,6 +971,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y+</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="yalign">0</property>
                                 <signal name="released" handler="on_yp_released" swapped="no"/>
@@ -981,6 +998,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Y+X- in</property>
                                 <property name="use_action_appearance">False</property>
                                 <property name="xalign">0</property>
                                 <property name="yalign">0</property>
@@ -1279,6 +1297,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">X+X+</property>
                                             <property name="use_action_appearance">False</property>
                                             <signal name="released" handler="on_angle_xp_released" swapped="no"/>
                                             <child>
@@ -1301,6 +1320,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">Y+Y+</property>
                                             <property name="use_action_appearance">False</property>
                                             <signal name="released" handler="on_angle_yp_released" swapped="no"/>
                                             <child>
@@ -1325,6 +1345,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">X-X-</property>
                                             <property name="use_action_appearance">False</property>
                                             <signal name="released" handler="on_angle_xm_released" swapped="no"/>
                                             <child>
@@ -1351,6 +1372,7 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="tooltip_text" translatable="yes">Y-Y-</property>
                                             <property name="use_action_appearance">False</property>
                                             <signal name="released" handler="on_angle_ym_released" swapped="no"/>
                                             <child>
@@ -2212,6 +2234,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Z-</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_down_released" swapped="no"/>
                             <child>
@@ -2261,6 +2284,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Tool diam</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_tool_dia_released" swapped="no"/>
                             <child>
@@ -2283,6 +2307,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Lx out</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_lx_out_released" swapped="no"/>
                             <child>
@@ -2305,6 +2330,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Ly out</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_ly_out_released" swapped="no"/>
                             <child>
@@ -2327,6 +2353,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Lx in</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_lx_in_released" swapped="no"/>
                             <child>
@@ -2349,6 +2376,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Ly in</property>
                             <property name="use_action_appearance">False</property>
                             <signal name="released" handler="on_ly_in_released" swapped="no"/>
                             <child>
@@ -2398,6 +2426,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">TS Height</property>
                                         <property name="related_action">vcp_action_reload</property>
                                         <property name="use_action_appearance">False</property>
                                         <signal name="clicked" handler="clicked_btn_probe_tool_setter" swapped="no"/>
@@ -2421,6 +2450,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="tooltip_text" translatable="yes">Workpiece Heidht</property>
                                         <property name="related_action">vcp_action_reload</property>
                                         <property name="use_action_appearance">False</property>
                                         <signal name="clicked" handler="clicked_btn_probe_workpiece" swapped="no"/>
