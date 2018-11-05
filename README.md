@@ -1,4 +1,4 @@
-# Probe Screen for LinuxCNC
+# Probe Screen V2 for LinuxCNC
 
  Install.
 -----------------------------------------------------------------------------
