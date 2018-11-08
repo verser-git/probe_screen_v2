@@ -1806,7 +1806,7 @@ class ProbeScreenClass:
         # move X - edge_lenght- xy_clearance
         s="""G91
         G1 X-%f
-        G90""" % (self.spbtn1_edge_lenght.get_value() + self.spbtn1_xy_clearance.get_value() )        
+        G90""" % (0.5*self.tsdiam + self.spbtn1_xy_clearance.get_value() )        
         if self.gcode(s) == -1:
             return
         if self.z_clearance_down() == -1:
@@ -1817,7 +1817,7 @@ class ProbeScreenClass:
         # show X result
         a=self.probed_position_with_offsets()
         xpres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xp.set_text( "%.4f" % xpres )
+#        self.lb_probe_xp.set_text( "%.4f" % xpres )
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -1826,8 +1826,8 @@ class ProbeScreenClass:
         if self.gcode(s) == -1:
             return
 
-        # move X + 2 edge_lenght +  xy_clearance
-        aa=2*self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        # move X + tsdiam +  xy_clearance
+        aa=self.tsdiam+self.spbtn1_xy_clearance.get_value()
         s="""G91
         G1 X%f
         G90""" % (aa)        
@@ -1842,7 +1842,7 @@ class ProbeScreenClass:
         # show X result
         a=self.probed_position_with_offsets()
         xmres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_xm.set_text( "%.4f" % xmres )
+#        self.lb_probe_xm.set_text( "%.4f" % xmres )
         self.lenght_x()
         xcres=0.5*(xpres+xmres)
         self.lb_probe_xc.set_text( "%.4f" % xcres )
@@ -1855,8 +1855,8 @@ class ProbeScreenClass:
             return
 
 
-        # move Y - edge_lenght- xy_clearance 
-        a=self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        # move Y - tsdiam/2 - xy_clearance 
+        a=0.5*self.tsdiam+self.spbtn1_xy_clearance.get_value()
         s="""G91
         G1 Y-%f
         G90""" % a
@@ -1870,7 +1870,7 @@ class ProbeScreenClass:
         # show Y result
         a=self.probed_position_with_offsets()
         ypres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_yp.set_text( "%.4f" % ypres )
+#        self.lb_probe_yp.set_text( "%.4f" % ypres )
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
@@ -1879,8 +1879,8 @@ class ProbeScreenClass:
         if self.gcode(s) == -1:
             return
 
-        # move Y + 2 edge_lenght +  xy_clearance
-        aa=2*self.spbtn1_edge_lenght.get_value()+self.spbtn1_xy_clearance.get_value()
+        # move Y + tsdiam +  xy_clearance
+        aa=self.tsdiam+self.spbtn1_xy_clearance.get_value()
         s="""G91
         G1 Y%f
         G90""" % (aa)        
@@ -1894,7 +1894,7 @@ class ProbeScreenClass:
         # show Y result
         a=self.probed_position_with_offsets()
         ymres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
-        self.lb_probe_ym.set_text( "%.4f" % ymres )
+#        self.lb_probe_ym.set_text( "%.4f" % ymres )
         self.lenght_y()
         # find, show and move to finded  point
         ycres=0.5*(ypres+ymres)
@@ -1902,10 +1902,12 @@ class ProbeScreenClass:
         diam=self.spbtn1_probe_diam.get_value() + (ymres-ypres-self.tsdiam)
 
         self.lb_probe_d.set_text( "%.4f" % diam )
-        self.add_history(gtkbutton.get_tooltip_text(),"D",0,0,0,0,0,0,0,0,0,diam,0)
         # move Z to start point up
         if self.z_clearance_up() == -1:
             return
+        self.stat.poll()
+        tmpz=self.stat.position[2] - 4
+        self.add_history(gtkbutton.get_tooltip_text(),"XcYcZD",0,xcres,0,0,0,ycres,0,0,tmpz,diam,0)
         # move to finded  point
         s = "G1 Y%f" % ycres
         if self.gcode(s) == -1:
@@ -2204,11 +2206,11 @@ class ProbeScreenClass:
         hal_glib.GPin( pin ).connect( 'value_changed', self.on_tool_change )
         self.halcomp['toolchange-number'] = self.stat.tool_in_spindle
         # tool measurement probe settings
-        xpos, ypos, zpos, maxprobe, tsdiam, revrott = self.get_tool_sensor_data()
-        if not xpos or not ypos or not zpos or not maxprobe or not tsdiam or not revrott :
+        self.xpos, self.ypos, self.zpos, self.maxprobe, self.tsdiam, self.revrott = self.get_tool_sensor_data()
+        if not self.xpos or not self.ypos or not self.zpos or not self.maxprobe or not self.tsdiam or not self.revrott :
             self.chk_use_tool_measurement.set_active( False )
             self.tool_dia.set_sensitive( False )
-            print( _( "**** auto_tool_measurement INFO ****" ) )
+            print( _( "**** PROBE SCREEN INFO ****" ) )
             print( _( "**** no valid probe config in INI File ****" ) )
             print( _( "**** disabled auto tool measurement ****" ) )
         else:

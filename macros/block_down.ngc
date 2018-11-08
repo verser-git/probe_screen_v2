@@ -7,11 +7,13 @@ G10 L20 P0  Z[#<_hal[axis.2.joint-pos-cmd]>]
 
 G91
 F #<_hal[probe.ps_searchvel]>
-G38.2 Z-5
-G0 Z0.26 (custom value)
+G38.2 Z[-#<_hal[probe.ps_probe_max]>]
+G1 Z[#<_hal[probe.ps_probe_latch]>] F#<_ini[TOOLSENSOR]RAPID_SPEED>
 F #<_hal[probe.ps_probevel]>
-G38.2 Z-0.5 (custom value)
-G0 Z4
+G4 P0.5
+G38.2 Z[-#<_hal[probe.ps_probe_latch]>*2]
+(G1 Z[#<_hal[probe.ps_probe_max]>] F#<_ini[TOOLSENSOR]RAPID_SPEED>)
+G1 Z4 F#<_ini[TOOLSENSOR]RAPID_SPEED>
 G90
 o<block_down> endsub
 M2
