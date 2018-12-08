@@ -40,6 +40,14 @@ Any of the search ends at XY moving at the desired point (or edge, or corner, or
 
 More info https://vers.by/en/blog/useful-articles/probe-screen
 
+Changes in updates.
+----------------------------------------------------------------------------------
+
+v.2.0.6
+-fixed incorrect toolchange pin connection
+-added FernV's corrections for inch
+-added FernV's scrolling screen version
+
  Установка.
 -----------------------------------------------------------------------------
 1. Добавьте в конфигурационные файлы .ini ...-postgui.hal все настройки из my-mill.ini, my-mill-postgui.hal, примените свои собственные константы.

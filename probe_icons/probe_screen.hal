@@ -1,0 +1,3 @@
+net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
+net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
+net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number

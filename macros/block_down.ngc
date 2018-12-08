@@ -13,7 +13,14 @@ F #<_hal[probe.ps_probevel]>
 G4 P0.5
 G38.2 Z[-#<_hal[probe.ps_probe_latch]>*2]
 (G1 Z[#<_hal[probe.ps_probe_max]>] F#<_ini[TOOLSENSOR]RAPID_SPEED>)
-G1 Z4 F#<_ini[TOOLSENSOR]RAPID_SPEED>
+
+(hardcode distance must not be the same)
+o11 if [#<_metric>]
+	G1 Z4 F#<_ini[TOOLSENSOR]RAPID_SPEED>
+o11 else
+	G1 Z0.2 F#<_ini[TOOLSENSOR]RAPID_SPEED>
+o11 endif
+
 G90
 o<block_down> endsub
 M2
