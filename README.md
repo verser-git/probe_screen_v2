@@ -44,9 +44,11 @@ Changes in updates.
 ----------------------------------------------------------------------------------
 
 v.2.0.6
+```sh
 -fixed incorrect toolchange pin connection
 -added FernV's corrections for inch
 -added FernV's scrolling screen version
+```
 
  Установка.
 -----------------------------------------------------------------------------
