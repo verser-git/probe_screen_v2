@@ -20,7 +20,6 @@ If you are already using .axisrc, then only add to your file contents of this .a
 #net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
 #net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
 #net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
-#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
 ```
 
 Use.
@@ -70,7 +69,6 @@ v.2.0.6
 #net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
 #net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
 #net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
-#net tool-prepare-loopback iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
 ```
 
 Использование.
