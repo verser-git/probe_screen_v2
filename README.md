@@ -2,25 +2,26 @@
 
  Install.
 -----------------------------------------------------------------------------
-1. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal, substitute your own constants.
-
-2. The following folders from the archive are placed in configuration folder:
-```sh
-/python
-/macros
-/probe_icons
-```
-
-3. .axisrc is placed in home ~/ folder.
-If you are already using .axisrc, then only add to your file contents of this .axisrc.
-
-4. Delete (or comment out) from all .hal files lines of the form:
+1. Delete (or comment out) from all .hal files lines of the form:
 ```sh
 #loadusr -W hal_manualtoolchange
 #net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
 #net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
 #net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
 ```
+
+2. Add to your .ini ...-postgui.hal settings from my-mill.ini and my-mill-postgui.hal, substitute your own constants.
+
+3. The following folders from the archive are placed in configuration folder:
+```sh
+/python
+/macros
+/probe_icons
+```
+
+4. .axisrc is placed in home ~/ folder.
+If you are already using .axisrc, then only add to your file contents of this .axisrc.
+
 
 Use.
 ----------------------------------------------------------------------------------
@@ -51,25 +52,25 @@ v.2.0.6
 
  Установка.
 -----------------------------------------------------------------------------
-1. Добавьте в конфигурационные файлы .ini ...-postgui.hal все настройки из my-mill.ini, my-mill-postgui.hal, примените свои собственные константы.
-
-2. Следующие папки из архива перенесите в папку с конфигурацией станка:
-```sh
-/python
-/macros
-/probe_icons
-```
-
-3. Файл .axisrc разместите в папке home ~/.
-Если у Вас уже есть .axisrc, то добавьте в него (в конце) содержимое прилагаемого .axisrc
-
-4. Удалите (или закомментируйте) из всех  .hal файлов строки вида:
+1. Удалите (или закомментируйте) из всех  .hal файлов строки вида:
 ```sh
 #loadusr -W hal_manualtoolchange
 #net tool-change iocontrol.0.tool-change => hal_manualtoolchange.change
 #net tool-changed iocontrol.0.tool-changed <= hal_manualtoolchange.changed
 #net tool-number iocontrol.0.tool-prep-number => hal_manualtoolchange.number
 ```
+2. Добавьте в конфигурационные файлы .ini ...-postgui.hal все настройки из my-mill.ini, my-mill-postgui.hal, примените свои собственные константы.
+
+3. Следующие папки из архива перенесите в папку с конфигурацией станка:
+```sh
+/python
+/macros
+/probe_icons
+```
+
+4. Файл .axisrc разместите в папке home ~/.
+Если у Вас уже есть .axisrc, то добавьте в него (в конце) содержимое прилагаемого .axisrc
+
 
 Использование.
 ----------------------------------------------------------------------------------
