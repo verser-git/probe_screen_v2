@@ -1,4 +1,3 @@
-%
 o<probe_down> sub
 F#<_ini[TOOLSENSOR]RAPID_SPEED>
 G53 G1 Z[#<_ini[AXIS_2]MAX_LIMIT>]
@@ -20,4 +19,3 @@ G90
 G53 G1 Z[#<_ini[TOOLSENSOR]Z>] F#<_ini[TOOLSENSOR]RAPID_SPEED>	
 o<probe_down> endsub
 M2
-%

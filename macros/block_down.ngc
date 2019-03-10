@@ -1,4 +1,3 @@
-%
 o<block_down> sub
 (cancel all Z offsets)
 G49
@@ -24,4 +23,3 @@ o11 endif
 G90
 o<block_down> endsub
 M2
-%

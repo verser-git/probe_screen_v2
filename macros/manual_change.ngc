@@ -1,4 +1,3 @@
-%
 ; manual toolchange with automatic tool length probe 
 
 o<manual_change> sub
@@ -76,4 +75,4 @@ G43
 ; signal success be returning a value > 0:
 o<manual_change> endsub [1]
 m2
-%
+

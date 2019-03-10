@@ -1,4 +1,3 @@
-%
 o<gotots> sub
 F#<_ini[TOOLSENSOR]RAPID_SPEED>
 G53 G1 Z[#<_ini[AXIS_2]MAX_LIMIT>]
@@ -16,4 +15,4 @@ G1 Z4 F#<_ini[TOOLSENSOR]RAPID_SPEED>
 G90
 o<gotots> endsub
 M2
-%
+
