@@ -43,6 +43,11 @@ More info https://vers.by/en/blog/useful-articles/probe-screen
 Changes in updates.
 ----------------------------------------------------------------------------------
 
+v.2.0.7
+```sh
+-correction my-mill-postgui.hal from installation instructions for tool change
+-delete all "%" from macros
+```
 v.2.0.6
 ```sh
 -fixed incorrect toolchange pin connection
