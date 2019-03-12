@@ -43,6 +43,12 @@ More info https://vers.by/en/blog/useful-articles/probe-screen
 Changes in updates.
 ----------------------------------------------------------------------------------
 
+v.2.0.8
+```sh
+-corrections in tool diameter button
+-allow neg. angle value
+-correction pref. and history for tool measurement
+```
 v.2.0.7
 ```sh
 -correction my-mill-postgui.hal from installation instructions for tool change

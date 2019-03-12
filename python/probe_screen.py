@@ -248,9 +248,9 @@ class ProbeScreenClass:
             time.sleep(1)
 
     def rotate_coord_system(self,a=0.):
+        self.spbtn_offs_angle.set_value(a)
+        self.lb_probe_a.set_text( "%.3f" % a)
         if self.chk_auto_rott.get_active() :
-            self.spbtn_offs_angle.set_value(a)
-            self.lb_probe_a.set_text( "%.3f" % a)
             s="G10 L2 P0"
             if self.chk_set_zero.get_active() :
                 s += " X%s" % self.spbtn_offs_x.get_value()
@@ -1417,12 +1417,16 @@ class ProbeScreenClass:
         a=self.probed_position_with_offsets()
         ycres=float(a[1])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yc.set_text( "%.4f" % ycres )
-
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
         # move X + edge_lenght
         s="""G91
         G1 X%f
         G90""" % (self.spbtn1_edge_lenght.get_value())
         if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yplus.ngc
         if self.ocode ("O<yplus> call") == -1:
@@ -1464,12 +1468,16 @@ class ProbeScreenClass:
         a=self.probed_position_with_offsets()
         ycres=float(a[1])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_yc.set_text( "%.4f" % ycres )
-
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
         # move X - edge_lenght
         s="""G91
         G1 X-%f
         G90""" % (self.spbtn1_edge_lenght.get_value())
         if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start yminus.ngc
         if self.ocode ("O<yminus> call") == -1:
@@ -1510,12 +1518,16 @@ class ProbeScreenClass:
         a=self.probed_position_with_offsets()
         xcres=float(a[0])+0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xc.set_text( "%.4f" % xcres )
-
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
         # move Y - edge_lenght
         s="""G91
         G1 Y-%f
         G90""" % (self.spbtn1_edge_lenght.get_value())
         if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xplus.ngc
         if self.ocode ("O<xplus> call") == -1:
@@ -1556,12 +1568,16 @@ class ProbeScreenClass:
         a=self.probed_position_with_offsets()
         xcres=float(a[0])-0.5*self.spbtn1_probe_diam.get_value()
         self.lb_probe_xc.set_text( "%.4f" % xcres )
-
+        # move Z to start point
+        if self.z_clearance_up() == -1:
+            return
         # move Y + edge_lenght
         s="""G91
         G1 Y%f
         G90""" % (self.spbtn1_edge_lenght.get_value())
         if self.gcode(s) == -1:
+            return
+        if self.z_clearance_down() == -1:
             return
         # Start xminus.ngc
         if self.ocode ("O<xminus> call") == -1:
@@ -1969,21 +1985,27 @@ class ProbeScreenClass:
             self.halcomp['toolchange-changed'] = False
 
     def get_tool_sensor_data(self):
-        xpos = self.inifile.find("TOOLSENSOR", "X")
-        ypos = self.inifile.find("TOOLSENSOR", "Y")
-        zpos = self.inifile.find("TOOLSENSOR", "Z")
-        maxprobe = self.inifile.find("TOOLSENSOR", "MAXPROBE")
-        tsdiam = self.inifile.find("TOOLSENSOR", "TS_DIAMETER")
-        revrott = self.inifile.find("TOOLSENSOR", "REV_ROTATION_SPEED")
+        xpos = float(self.inifile.find("TOOLSENSOR", "X"))
+        ypos = float(self.inifile.find("TOOLSENSOR", "Y"))
+        zpos = float(self.inifile.find("TOOLSENSOR", "Z"))
+        maxprobe = float(self.inifile.find("TOOLSENSOR", "MAXPROBE"))
+        tsdiam = float(self.inifile.find("TOOLSENSOR", "TS_DIAMETER"))
+        revrott = float(self.inifile.find("TOOLSENSOR", "REV_ROTATION_SPEED"))
         return xpos, ypos, zpos, maxprobe, tsdiam, revrott
 
     def on_spbtn_probe_height_value_changed( self, gtkspinbutton, data = None ):
         self.halcomp["probeheight"] = gtkspinbutton.get_value()
         self.prefs.putpref( "probeheight", gtkspinbutton.get_value(), float )
-
+        c="TS Height = " + "%.4f" % gtkspinbutton.get_value()
+        i=self.buffer.get_end_iter()
+        if i.get_line() > 1000 :
+            i.backward_line()
+            self.buffer.delete(i,self.buffer.get_end_iter())
+        i.set_line(0)
+        self.buffer.insert(i, "%s \n" % c)
     def on_spbtn_block_height_value_changed( self, gtkspinbutton, data = None ):
         blockheight = gtkspinbutton.get_value()
-        if blockheight != False or blockheight == 0:
+        if blockheight != False:
             self.halcomp["blockheight"] = blockheight
             self.halcomp["probeheight"] = self.spbtn_probe_height.get_value()
         else:
@@ -1998,8 +2020,13 @@ class ProbeScreenClass:
         self.command.wait_complete()
         self.command.mdi( "G10 L2 P0 Z%s" % origin )
         self.vcp_action_reload.emit( "activate" )
-
-
+        c="Workpiece Height = " + "%.4f" % gtkspinbutton.get_value()
+        i=self.buffer.get_end_iter()
+        if i.get_line() > 1000 :
+            i.backward_line()
+            self.buffer.delete(i,self.buffer.get_end_iter())
+        i.set_line(0)
+        self.buffer.insert(i, "%s \n" % c)
     def clicked_btn_probe_tool_setter(self, data = None):
         # Start probe_down.ngc
         self.command.mode( linuxcnc.MODE_MDI )
