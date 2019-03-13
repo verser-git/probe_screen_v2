@@ -1,6 +1,6 @@
 o<probe_down> sub
 F#<_ini[TOOLSENSOR]RAPID_SPEED>
-G53 G1 Z[#<_ini[AXIS_2]MAX_LIMIT>]
+G53 G1 Z[#<_ini[AXIS_2]MAX_LIMIT>-0.1]
 G53 G1 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>]
 G53 G1 Z[#<_ini[TOOLSENSOR]Z>]
 (cancel all Z offsets)
